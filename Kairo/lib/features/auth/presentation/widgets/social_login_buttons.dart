@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kairo/core/theme/app_radius.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
 
@@ -32,14 +33,22 @@ class SocialLoginButtons extends StatelessWidget {
       children: [
         _SocialButton(
           onPressed: onGooglePressed,
-          icon: Icons.g_mobiledata,
+          icon: SvgPicture.asset(
+            'assets/images/google.svg',
+            width: 20,
+            height: 20,
+          ),
           label: googleLabel,
           theme: theme,
         ),
         AppSpacing.verticalMd,
         _SocialButton(
           onPressed: onApplePressed,
-          icon: Icons.apple,
+          icon: Icon(
+            Icons.apple,
+            size: 24,
+            color: theme.colorScheme.onSurface,
+          ),
           label: appleLabel,
           theme: theme,
         ),
@@ -57,7 +66,7 @@ class _SocialButton extends StatelessWidget {
   });
 
   final VoidCallback? onPressed;
-  final IconData icon;
+  final Widget icon;
   final String label;
   final ThemeData theme;
 
@@ -66,16 +75,22 @@ class _SocialButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: 52,
-      child: OutlinedButton.icon(
+      child: OutlinedButton(
         onPressed: onPressed,
-        icon: Icon(icon, size: 24),
-        label: Text(label),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.onSurface,
           side: BorderSide(color: theme.dividerColor),
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.borderRadiusMd,
           ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            icon,
+            AppSpacing.horizontalSm,
+            Text(label),
+          ],
         ),
       ),
     );
