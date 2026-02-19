@@ -1,0 +1,121 @@
+import 'package:flutter/material.dart';
+
+/// Semantic color tokens for the design system.
+///
+/// All widgets reference these tokens instead of hardcoded colors.
+/// Supports both light and dark themes.
+class AppColors {
+  const AppColors._();
+
+  // ── Light Theme ──────────────────────────────────────────────
+
+  /// Primary brand color.
+  static const Color primaryLight = Color(0xFF6366F1);
+
+  /// Primary variant for containers/backgrounds.
+  static const Color primaryContainerLight = Color(0xFFE0E1FF);
+
+  /// Secondary accent color.
+  static const Color secondaryLight = Color(0xFF10B981);
+
+  /// Secondary container.
+  static const Color secondaryContainerLight = Color(0xFFD1FAE5);
+
+  /// Error / destructive color.
+  static const Color errorLight = Color(0xFFEF4444);
+
+  /// Error container.
+  static const Color errorContainerLight = Color(0xFFFEE2E2);
+
+  /// Warning color.
+  static const Color warningLight = Color(0xFFF59E0B);
+
+  /// Success color.
+  static const Color successLight = Color(0xFF10B981);
+
+  /// Info color.
+  static const Color infoLight = Color(0xFF3B82F6);
+
+  /// Main background.
+  static const Color backgroundLight = Color(0xFFF8FAFC);
+
+  /// Surface (cards, sheets).
+  static const Color surfaceLight = Color(0xFFFFFFFF);
+
+  /// On-primary (text/icons on primary).
+  static const Color onPrimaryLight = Color(0xFFFFFFFF);
+
+  /// On-surface (text/icons on surface).
+  static const Color onSurfaceLight = Color(0xFF1E293B);
+
+  /// Primary text color.
+  static const Color textPrimaryLight = Color(0xFF0F172A);
+
+  /// Secondary text color.
+  static const Color textSecondaryLight = Color(0xFF64748B);
+
+  /// Disabled text / hint color.
+  static const Color textDisabledLight = Color(0xFF94A3B8);
+
+  /// Border color.
+  static const Color borderLight = Color(0xFFE2E8F0);
+
+  /// Divider color.
+  static const Color dividerLight = Color(0xFFF1F5F9);
+
+  // ── Dark Theme ───────────────────────────────────────────────
+
+  /// Primary brand color (dark).
+  static const Color primaryDark = Color(0xFF818CF8);
+
+  /// Primary container (dark).
+  static const Color primaryContainerDark = Color(0xFF312E81);
+
+  /// Secondary accent (dark).
+  static const Color secondaryDark = Color(0xFF34D399);
+
+  /// Secondary container (dark).
+  static const Color secondaryContainerDark = Color(0xFF064E3B);
+
+  /// Error (dark).
+  static const Color errorDark = Color(0xFFF87171);
+
+  /// Error container (dark).
+  static const Color errorContainerDark = Color(0xFF7F1D1D);
+
+  /// Warning (dark).
+  static const Color warningDark = Color(0xFFFBBF24);
+
+  /// Success (dark).
+  static const Color successDark = Color(0xFF34D399);
+
+  /// Info (dark).
+  static const Color infoDark = Color(0xFF60A5FA);
+
+  /// Background (dark).
+  static const Color backgroundDark = Color(0xFF0F172A);
+
+  /// Surface (dark).
+  static const Color surfaceDark = Color(0xFF1E293B);
+
+  /// On-primary (dark).
+  static const Color onPrimaryDark = Color(0xFF1E1B4B);
+
+  /// On-surface (dark).
+  static const Color onSurfaceDark = Color(0xFFF1F5F9);
+
+  /// Primary text (dark).
+  static const Color textPrimaryDark = Color(0xFFF8FAFC);
+
+  /// Secondary text (dark).
+  static const Color textSecondaryDark = Color(0xFF94A3B8);
+
+  /// Disabled text (dark).
+  static const Color textDisabledDark = Color(0xFF475569);
+
+  /// Border (dark).
+  static const Color borderDark = Color(0xFF334155);
+
+  /// Divider (dark).
+  static const Color dividerDark = Color(0xFF1E293B);
+}
