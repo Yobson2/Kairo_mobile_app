@@ -10,17 +10,18 @@ flutter_native_splash:
   color: "#FFFFFF"
 
   # Background color for dark mode
-  color_dark: "#1C1B1F"
+  color_dark: "#0F172A"
 
-  # Optional splash image (centered on screen)
+  # Splash logo (Compass Coin logomark)
+  # Uncomment after exporting logo.svg → splash.png (centered, ~200x200)
   # image: assets/images/splash.png
   # image_dark: assets/images/splash_dark.png
 
   # Android 12+ splash screen
   android_12:
     color: "#FFFFFF"
-    color_dark: "#1C1B1F"
-    # icon_background_color: "#6750A4"
+    color_dark: "#0F172A"
+    icon_background_color: "#10B981"
     # image: assets/images/splash_android12.png
 
   # Keep splash visible until app is ready (removed manually in code)

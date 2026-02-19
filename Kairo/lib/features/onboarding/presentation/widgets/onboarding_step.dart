@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
+import 'package:kairo/features/onboarding/presentation/widgets/onboarding_illustration.dart';
 
-/// Single onboarding step with icon, title, and description.
+/// Single onboarding step with illustration, title, and description.
 class OnboardingStep extends StatelessWidget {
-  /// Creates an [OnboardingStep].
   const OnboardingStep({
-    required this.icon,
+    required this.stepIndex,
     required this.title,
     required this.description,
     super.key,
   });
 
-  /// Large icon displayed in the center.
-  final IconData icon;
+  /// Index of the step (used to pick the correct illustration).
+  final int stepIndex;
 
   /// Step title.
   final String title;
@@ -23,28 +23,30 @@ class OnboardingStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Padding(
       padding: AppSpacing.paddingHorizontalXl,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const Spacer(flex: 2),
+          // Illustration
+          OnboardingIllustration(stepIndex: stepIndex),
           const Spacer(),
-          Icon(
-            icon,
-            size: 120,
-            color: theme.colorScheme.primary,
-          ),
-          AppSpacing.verticalXxxl,
+          // Title
           Text(
             title,
             style: theme.textTheme.headlineMedium,
             textAlign: TextAlign.center,
           ),
-          AppSpacing.verticalLg,
+          AppSpacing.verticalMd,
+          // Description
           Text(
             description,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.textTheme.bodySmall?.color,
+              color: theme.brightness == Brightness.dark
+                  ? theme.textTheme.bodySmall?.color
+                  : theme.textTheme.bodySmall?.color,
+              height: 1.5,
             ),
             textAlign: TextAlign.center,
           ),

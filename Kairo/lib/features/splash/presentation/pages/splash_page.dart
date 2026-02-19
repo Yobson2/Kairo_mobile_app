@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
 import 'package:kairo/core/widgets/loading/app_progress.dart';
 import 'package:kairo/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kairo/features/splash/presentation/providers/splash_provider.dart';
-import 'package:go_router/go_router.dart';
 
 /// Splash page shown at app launch.
 ///
@@ -45,8 +46,8 @@ class SplashPage extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              'assets/icon/icon.png',
+            SvgPicture.asset(
+              'assets/images/logo-gradient.svg',
               width: 100,
               height: 100,
             ),

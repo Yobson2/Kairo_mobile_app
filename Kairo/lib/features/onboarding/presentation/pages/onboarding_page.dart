@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kairo/core/extensions/context_extensions.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
 import 'package:kairo/core/widgets/buttons/app_primary_button.dart';
 import 'package:kairo/features/onboarding/presentation/providers/onboarding_provider.dart';
 import 'package:kairo/features/onboarding/presentation/widgets/onboarding_step.dart';
-import 'package:go_router/go_router.dart';
 
-/// Onboarding page with 3 swipeable steps.
+/// Onboarding page with 3 swipeable finance-themed steps.
 class OnboardingPage extends ConsumerStatefulWidget {
-  /// Creates an [OnboardingPage].
   const OnboardingPage({super.key});
 
   @override
@@ -17,6 +17,7 @@ class OnboardingPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
+  static const _totalPages = 3;
   final _pageController = PageController();
 
   @override
@@ -34,20 +35,44 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   Widget build(BuildContext context) {
     final currentPage = ref.watch(onboardingNotifierProvider);
     final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            // Skip button
-            Align(
-              alignment: Alignment.topRight,
-              child: TextButton(
-                onPressed: _onComplete,
-                child: Text(l10n.commonSkip),
+            // ── Top bar: logo + skip ──────────────────────────────
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.sm,
+              ),
+              child: Row(
+                children: [
+                  // Brand logo
+                  SvgPicture.asset(
+                    isDark
+                        ? 'assets/images/logo-dark.svg'
+                        : 'assets/images/logo.svg',
+                    height: 32,
+                  ),
+                  const Spacer(),
+                  // Skip button
+                  TextButton(
+                    onPressed: _onComplete,
+                    child: Text(
+                      l10n.commonSkip,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.textTheme.bodySmall?.color,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            // Pages
+
+            // ── Page view ─────────────────────────────────────────
             Expanded(
               child: PageView(
                 controller: _pageController,
@@ -56,52 +81,57 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 },
                 children: [
                   OnboardingStep(
-                    icon: Icons.waving_hand,
+                    stepIndex: 0,
                     title: l10n.onboardingTitle1,
                     description: l10n.onboardingDesc1,
                   ),
                   OnboardingStep(
-                    icon: Icons.folder_open,
+                    stepIndex: 1,
                     title: l10n.onboardingTitle2,
                     description: l10n.onboardingDesc2,
                   ),
                   OnboardingStep(
-                    icon: Icons.rocket_launch,
+                    stepIndex: 2,
                     title: l10n.onboardingTitle3,
                     description: l10n.onboardingDesc3,
                   ),
                 ],
               ),
             ),
-            // Dots indicator
+
+            // ── Dot indicators ────────────────────────────────────
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (index) {
+              children: List.generate(_totalPages, (index) {
                 final isActive = index == currentPage;
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
                   margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: isActive ? 24 : 8,
+                  width: isActive ? 28 : 8,
                   height: 8,
                   decoration: BoxDecoration(
                     color: isActive
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.outline,
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.primary
+                            .withValues(alpha: isDark ? 0.2 : 0.15),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 );
               }),
             ),
+
             AppSpacing.verticalXl,
-            // Next / Get Started button
+
+            // ── CTA button ────────────────────────────────────────
             Padding(
               padding: AppSpacing.paddingHorizontalXl,
               child: AppPrimaryButton(
-                text: currentPage == 2
+                text: currentPage == _totalPages - 1
                     ? l10n.onboardingGetStarted
                     : l10n.commonNext,
                 onPressed: () {
-                  if (currentPage < 2) {
+                  if (currentPage < _totalPages - 1) {
                     _pageController.nextPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
@@ -112,6 +142,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 },
               ),
             ),
+
             AppSpacing.verticalXxl,
           ],
         ),

@@ -53,12 +53,12 @@
   "validationPasswordLength": "Le mot de passe doit contenir au moins 8 caractères",
   "validationPasswordMatch": "Les mots de passe ne correspondent pas",
 
-  "onboardingTitle1": "Bienvenue",
-  "onboardingDesc1": "Découvrez une nouvelle façon de gérer vos tâches et booster votre productivité.",
-  "onboardingTitle2": "Restez organisé",
-  "onboardingDesc2": "Gardez tout au même endroit avec notre interface intuitive.",
-  "onboardingTitle3": "Commencez",
-  "onboardingDesc3": "Créez votre compte et commencez votre aventure aujourd'hui.",
+  "onboardingTitle1": "Suivez Chaque Dépense",
+  "onboardingDesc1": "Enregistrez vos dépenses et revenus en quelques secondes. Voyez exactement où va votre argent avec des aperçus clairs et instantanés.",
+  "onboardingTitle2": "Budgétez Plus Malin",
+  "onboardingDesc2": "Définissez des budgets personnalisés pour chaque catégorie et soyez alerté avant de trop dépenser. Gardez le contrôle, sans effort.",
+  "onboardingTitle3": "Atteignez Vos Objectifs",
+  "onboardingDesc3": "Créez des objectifs d'épargne, suivez votre progression et regardez votre argent grandir. Votre avenir financier commence ici.",
   "onboardingGetStarted": "Commencer",
 
   "homeTitle": "Accueil",
