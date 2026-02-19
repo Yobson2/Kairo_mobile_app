@@ -27,7 +27,23 @@ class ApiEndpoints {
   /// GET: Fetch the current user profile.
   static const String me = '/auth/me';
 
-  // -- Notes --
-  /// CRUD: Notes resource.
-  static const String notes = '/notes';
+  // -- Transactions --
+  /// CRUD: Transactions resource.
+  static const String transactions = '/transactions';
+
+  // -- Categories --
+  /// CRUD: Categories resource.
+  static const String categories = '/categories';
+
+  // -- Budgets --
+  /// CRUD: Budgets resource.
+  static const String budgets = '/budgets';
+
+  // -- Savings Goals --
+  /// CRUD: Savings goals resource.
+  static const String savingsGoals = '/savings-goals';
+
+  // -- Savings Contributions --
+  /// CRUD: Savings contributions resource.
+  static const String savingsContributions = '/savings-contributions';
 }

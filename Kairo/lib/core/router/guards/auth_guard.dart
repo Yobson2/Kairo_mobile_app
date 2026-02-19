@@ -26,7 +26,7 @@ String? authGuard(Ref ref, String currentPath) {
   final isPublicRoute = publicPaths.contains(currentPath);
 
   return switch (authState) {
-    AuthAuthenticated() when isPublicRoute => RouteNames.home,
+    AuthAuthenticated() when isPublicRoute => RouteNames.dashboard,
     AuthAuthenticated() => null,
     AuthUnauthenticated() when isPublicRoute => null,
     AuthUnauthenticated() => RouteNames.login,

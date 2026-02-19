@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kairo/core/providers/notification_provider.dart';
 import 'package:kairo/core/providers/storage_providers.dart';
 import 'package:kairo/core/usecase/usecase.dart';
 import 'package:kairo/core/utils/logger.dart';
@@ -38,6 +39,15 @@ Future<SplashResult> splashInit(Ref ref) async {
 Future<SplashResult> _resolve(Ref ref) async {
   try {
     final localStorage = ref.read(localStorageProvider);
+
+    // Initialize notification service.
+    final notifService = ref.read(notificationServiceProvider);
+    await notifService.init();
+
+    // Schedule daily reminder if enabled.
+    if (localStorage.isDailyReminderEnabled) {
+      await notifService.scheduleDailyReminder();
+    }
 
     // Check first launch
     if (localStorage.isFirstLaunch) {

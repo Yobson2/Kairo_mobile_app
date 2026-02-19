@@ -10,10 +10,10 @@ class AppColors {
   // ── Light Theme ──────────────────────────────────────────────
 
   /// Primary brand color.
-  static const Color primaryLight = Color(0xFF6366F1);
+  static const Color primaryLight = Color(0xFF10B981);
 
   /// Primary variant for containers/backgrounds.
-  static const Color primaryContainerLight = Color(0xFFE0E1FF);
+  static const Color primaryContainerLight = Color(0xFFD1FAE5);
 
   /// Secondary accent color.
   static const Color secondaryLight = Color(0xFF10B981);
@@ -66,10 +66,10 @@ class AppColors {
   // ── Dark Theme ───────────────────────────────────────────────
 
   /// Primary brand color (dark).
-  static const Color primaryDark = Color(0xFF818CF8);
+  static const Color primaryDark = Color(0xFF34D399);
 
   /// Primary container (dark).
-  static const Color primaryContainerDark = Color(0xFF312E81);
+  static const Color primaryContainerDark = Color(0xFF064E3B);
 
   /// Secondary accent (dark).
   static const Color secondaryDark = Color(0xFF34D399);
@@ -99,7 +99,7 @@ class AppColors {
   static const Color surfaceDark = Color(0xFF1E293B);
 
   /// On-primary (dark).
-  static const Color onPrimaryDark = Color(0xFF1E1B4B);
+  static const Color onPrimaryDark = Color(0xFF064E3B);
 
   /// On-surface (dark).
   static const Color onSurfaceDark = Color(0xFFF1F5F9);
@@ -118,4 +118,22 @@ class AppColors {
 
   /// Divider (dark).
   static const Color dividerDark = Color(0xFF1E293B);
+
+  // ── Finance-Specific Colors ─────────────────────────────────
+
+  /// Income color (green).
+  static const Color incomeLight = Color(0xFF22C55E);
+  static const Color incomeDark = Color(0xFF4ADE80);
+
+  /// Expense color (red).
+  static const Color expenseLight = Color(0xFFEF4444);
+  static const Color expenseDark = Color(0xFFF87171);
+
+  /// Budget color (amber).
+  static const Color budgetLight = Color(0xFFF59E0B);
+  static const Color budgetDark = Color(0xFFFBBF24);
+
+  /// Savings color (blue).
+  static const Color savingsLight = Color(0xFF3B82F6);
+  static const Color savingsDark = Color(0xFF60A5FA);
 }

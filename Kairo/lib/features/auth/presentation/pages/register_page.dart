@@ -57,7 +57,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         context.showSnackBar(state.message, isError: true);
       }
       if (state is AuthAuthenticated) {
-        context.go('/home');
+        context.go('/dashboard');
       }
     });
 

@@ -29,7 +29,7 @@ class SplashPage extends ConsumerWidget {
             case SplashResult.onboarding:
               context.go('/onboarding');
             case SplashResult.authenticated:
-              context.go('/home');
+              context.go('/dashboard');
             case SplashResult.unauthenticated:
               context.go('/login');
           }

@@ -14,6 +14,7 @@ class AppScaffold extends ConsumerWidget {
     this.appBar,
     this.bottomNavigationBar,
     this.floatingActionButton,
+    this.floatingActionButtonLocation,
     this.drawer,
     this.backgroundColor,
     this.resizeToAvoidBottomInset = true,
@@ -31,6 +32,9 @@ class AppScaffold extends ConsumerWidget {
 
   /// Optional floating action button.
   final Widget? floatingActionButton;
+
+  /// Optional floating action button location.
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
 
   /// Optional drawer.
   final Widget? drawer;
@@ -51,6 +55,7 @@ class AppScaffold extends ConsumerWidget {
       appBar: appBar,
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation,
       drawer: drawer,
       backgroundColor: backgroundColor,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,

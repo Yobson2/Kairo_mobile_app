@@ -1,73 +1,55 @@
-/// Static route name and path constants.
 abstract final class RouteNames {
   // -- Splash --
-  /// Splash screen path.
   static const String splash = '/';
-
-  /// Splash screen name.
   static const String splashName = 'splash';
 
   // -- Onboarding --
-  /// Onboarding path.
   static const String onboarding = '/onboarding';
-
-  /// Onboarding name.
   static const String onboardingName = 'onboarding';
 
   // -- Auth --
-  /// Login path.
   static const String login = '/login';
-
-  /// Login name.
   static const String loginName = 'login';
-
-  /// Register path.
   static const String register = '/register';
-
-  /// Register name.
   static const String registerName = 'register';
-
-  /// Forgot password path.
   static const String forgotPassword = '/forgot-password';
-
-  /// Forgot password name.
   static const String forgotPasswordName = 'forgotPassword';
-
-  /// OTP verification path.
   static const String otpVerification = '/otp-verification';
-
-  /// OTP verification name.
   static const String otpVerificationName = 'otpVerification';
 
-  // -- Home Shell --
-  /// Home path.
-  static const String home = '/home';
+  // -- Main Shell --
+  static const String dashboard = '/dashboard';
+  static const String dashboardName = 'dashboard';
 
-  /// Home name.
-  static const String homeName = 'home';
+  static const String transactions = '/transactions';
+  static const String transactionsName = 'transactions';
+  static const String transactionDetail = '/transactions/detail';
+  static const String transactionDetailName = 'transactionDetail';
 
-  /// Profile path.
-  static const String profile = '/profile';
+  static const String addTransaction = '/add-transaction';
+  static const String addTransactionName = 'addTransaction';
 
-  /// Profile name.
+  static const String budget = '/budget';
+  static const String budgetName = 'budget';
+  static const String budgetSetup = '/budget/setup';
+  static const String budgetSetupName = 'budgetSetup';
+  static const String budgetDetail = '/budget/detail';
+  static const String budgetDetailName = 'budgetDetail';
+
+  static const String more = '/more';
+  static const String moreName = 'more';
+
+  // -- Under More --
+  static const String profile = '/more/profile';
   static const String profileName = 'profile';
-
-  /// Settings path.
-  static const String settings = '/settings';
-
-  /// Settings name.
+  static const String settings = '/more/settings';
   static const String settingsName = 'settings';
-
-  // -- Notes --
-  /// Notes path.
-  static const String notes = '/home/notes';
-
-  /// Notes name.
-  static const String notesName = 'notes';
-
-  /// Note detail path.
-  static const String noteDetail = '/home/notes/detail';
-
-  /// Note detail name.
-  static const String noteDetailName = 'noteDetail';
+  static const String savingsGoals = '/more/savings';
+  static const String savingsGoalsName = 'savingsGoals';
+  static const String addSavingsGoal = '/more/savings/add';
+  static const String addSavingsGoalName = 'addSavingsGoal';
+  static const String savingsGoalDetail = '/more/savings/detail';
+  static const String savingsGoalDetailName = 'savingsGoalDetail';
+  static const String insights = '/more/insights';
+  static const String insightsName = 'insights';
 }

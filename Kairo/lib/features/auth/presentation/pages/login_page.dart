@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kairo/core/extensions/context_extensions.dart';
+import 'package:kairo/core/router/route_names.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
 import 'package:kairo/core/utils/validators.dart';
 import 'package:kairo/core/widgets/buttons/app_primary_button.dart';
@@ -10,7 +12,6 @@ import 'package:kairo/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kairo/features/auth/presentation/providers/auth_state.dart';
 import 'package:kairo/features/auth/presentation/widgets/auth_header.dart';
 import 'package:kairo/features/auth/presentation/widgets/social_login_buttons.dart';
-import 'package:go_router/go_router.dart';
 
 /// Login page with email/password form.
 class LoginPage extends ConsumerStatefulWidget {
@@ -53,7 +54,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         context.showSnackBar(state.message, isError: true);
       }
       if (state is AuthAuthenticated) {
-        context.go('/home');
+        context.go(RouteNames.dashboard);
       }
     });
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kairo/core/providers/analytics_provider.dart';
 import 'package:kairo/core/providers/storage_providers.dart';
 import 'package:kairo/core/router/analytics_observer.dart';
@@ -11,23 +12,30 @@ import 'package:kairo/features/auth/presentation/pages/otp_verification_page.dar
 import 'package:kairo/features/auth/presentation/pages/register_page.dart';
 import 'package:kairo/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kairo/features/auth/presentation/providers/auth_state.dart';
-import 'package:kairo/features/home/presentation/pages/home_page.dart';
-import 'package:kairo/features/notes/presentation/pages/note_detail_page.dart';
-import 'package:kairo/features/notes/presentation/pages/notes_page.dart';
-import 'package:kairo/features/home/presentation/pages/home_shell.dart';
-import 'package:kairo/features/home/presentation/pages/profile_page.dart';
-import 'package:kairo/features/home/presentation/pages/settings_page.dart';
+import 'package:kairo/features/budget/presentation/pages/budget_page.dart';
+import 'package:kairo/features/budget/presentation/pages/budget_setup_page.dart';
+import 'package:kairo/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:kairo/features/main/home_shell.dart';
+import 'package:kairo/features/more/presentation/pages/more_page.dart';
+import 'package:kairo/features/more/presentation/pages/profile_page.dart';
+import 'package:kairo/features/more/presentation/pages/settings_page.dart';
 import 'package:kairo/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:kairo/features/savings/presentation/pages/add_savings_goal_page.dart';
+import 'package:kairo/features/savings/presentation/pages/savings_goal_detail_page.dart';
+import 'package:kairo/features/savings/presentation/pages/savings_goals_page.dart';
 import 'package:kairo/features/splash/presentation/pages/splash_page.dart';
-import 'package:go_router/go_router.dart';
+import 'package:kairo/features/transactions/presentation/pages/add_transaction_page.dart';
+import 'package:kairo/features/transactions/presentation/pages/transaction_detail_page.dart';
+import 'package:kairo/features/transactions/presentation/pages/transactions_page.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _homeNavigatorKey = GlobalKey<NavigatorState>();
-final _profileNavigatorKey = GlobalKey<NavigatorState>();
-final _settingsNavigatorKey = GlobalKey<NavigatorState>();
+final _dashboardNavigatorKey = GlobalKey<NavigatorState>();
+final _transactionsNavigatorKey = GlobalKey<NavigatorState>();
+final _budgetNavigatorKey = GlobalKey<NavigatorState>();
+final _moreNavigatorKey = GlobalKey<NavigatorState>();
 
 /// Public routes that don't require authentication.
 const _publicPaths = [
@@ -75,7 +83,7 @@ GoRouter appRouter(Ref ref) {
 
       // Redirect authenticated users away from auth pages.
       if (auth is AuthAuthenticated && isPublicRoute) {
-        return RouteNames.home;
+        return RouteNames.dashboard;
       }
 
       // Redirect unauthenticated users to login for protected routes.
@@ -141,55 +149,124 @@ GoRouter appRouter(Ref ref) {
         },
       ),
 
-      // Home shell with bottom navigation
+      // Add Transaction (root-level modal with parentNavigatorKey)
+      GoRoute(
+        path: RouteNames.addTransaction,
+        name: RouteNames.addTransactionName,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) => AppPageTransitions.slideUp(
+          key: state.pageKey,
+          child: const AddTransactionPage(),
+        ),
+      ),
+
+      // Home shell with bottom navigation (4 branches)
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             HomeShell(navigationShell: navigationShell),
         branches: [
+          // Branch 0: Dashboard
           StatefulShellBranch(
-            navigatorKey: _homeNavigatorKey,
+            navigatorKey: _dashboardNavigatorKey,
             routes: [
               GoRoute(
-                path: RouteNames.home,
-                name: RouteNames.homeName,
-                builder: (context, state) => const HomePage(),
+                path: RouteNames.dashboard,
+                name: RouteNames.dashboardName,
+                builder: (context, state) => const DashboardPage(),
+              ),
+            ],
+          ),
+
+          // Branch 1: Transactions
+          StatefulShellBranch(
+            navigatorKey: _transactionsNavigatorKey,
+            routes: [
+              GoRoute(
+                path: RouteNames.transactions,
+                name: RouteNames.transactionsName,
+                builder: (context, state) => const TransactionsPage(),
                 routes: [
                   GoRoute(
-                    path: 'notes',
-                    name: RouteNames.notesName,
-                    builder: (context, state) => const NotesPage(),
-                    routes: [
-                      GoRoute(
-                        path: 'detail',
-                        name: RouteNames.noteDetailName,
-                        builder: (context, state) {
-                          final noteId = state.extra as String?;
-                          return NoteDetailPage(noteId: noteId);
-                        },
-                      ),
-                    ],
+                    path: 'detail',
+                    name: RouteNames.transactionDetailName,
+                    builder: (context, state) {
+                      final transactionId = state.extra as String?;
+                      return TransactionDetailPage(
+                        transactionId: transactionId,
+                      );
+                    },
                   ),
                 ],
               ),
             ],
           ),
+
+          // Branch 2: Budget
           StatefulShellBranch(
-            navigatorKey: _profileNavigatorKey,
+            navigatorKey: _budgetNavigatorKey,
             routes: [
               GoRoute(
-                path: RouteNames.profile,
-                name: RouteNames.profileName,
-                builder: (context, state) => const ProfilePage(),
+                path: RouteNames.budget,
+                name: RouteNames.budgetName,
+                builder: (context, state) => const BudgetPage(),
+                routes: [
+                  GoRoute(
+                    path: 'setup',
+                    name: RouteNames.budgetSetupName,
+                    builder: (context, state) => const BudgetSetupPage(),
+                  ),
+                ],
               ),
             ],
           ),
+
+          // Branch 3: More
           StatefulShellBranch(
-            navigatorKey: _settingsNavigatorKey,
+            navigatorKey: _moreNavigatorKey,
             routes: [
               GoRoute(
-                path: RouteNames.settings,
-                name: RouteNames.settingsName,
-                builder: (context, state) => const SettingsPage(),
+                path: RouteNames.more,
+                name: RouteNames.moreName,
+                builder: (context, state) => const MorePage(),
+                routes: [
+                  GoRoute(
+                    path: 'profile',
+                    name: RouteNames.profileName,
+                    builder: (context, state) => const ProfilePage(),
+                  ),
+                  GoRoute(
+                    path: 'settings',
+                    name: RouteNames.settingsName,
+                    builder: (context, state) => const SettingsPage(),
+                  ),
+                  GoRoute(
+                    path: 'savings',
+                    name: RouteNames.savingsGoalsName,
+                    builder: (context, state) => const SavingsGoalsPage(),
+                    routes: [
+                      GoRoute(
+                        path: 'add',
+                        name: RouteNames.addSavingsGoalName,
+                        builder: (context, state) => const AddSavingsGoalPage(),
+                      ),
+                      GoRoute(
+                        path: 'detail',
+                        name: RouteNames.savingsGoalDetailName,
+                        builder: (context, state) {
+                          final goalId = state.extra as String?;
+                          return SavingsGoalDetailPage(goalId: goalId);
+                        },
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    path: 'insights',
+                    name: RouteNames.insightsName,
+                    builder: (context, state) => const Scaffold(
+                      body: Center(child: Text('Insights - Coming Soon')),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

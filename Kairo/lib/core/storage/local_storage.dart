@@ -49,6 +49,47 @@ class LocalStorage {
   /// Marks the first launch as done.
   Future<bool> setFirstLaunchDone() => _prefs.setBool(_firstLaunchKey, false);
 
+  // -- Currency --
+
+  static const _currencyCodeKey = 'currency_code';
+
+  /// Gets the user's preferred currency code (e.g. 'XOF', 'NGN').
+  String? getCurrencyCode() => _prefs.getString(_currencyCodeKey);
+
+  /// Persists the user's preferred currency [code].
+  Future<bool> setCurrencyCode(String code) =>
+      _prefs.setString(_currencyCodeKey, code);
+
+  // -- Notifications --
+
+  static const _notificationsEnabledKey = 'notifications_enabled';
+  static const _budgetAlertThresholdKey = 'budget_alert_threshold';
+  static const _dailyReminderEnabledKey = 'daily_reminder_enabled';
+
+  /// Whether notifications are enabled.
+  bool get isNotificationsEnabled =>
+      _prefs.getBool(_notificationsEnabledKey) ?? true;
+
+  /// Toggles notifications on/off.
+  Future<bool> setNotificationsEnabled({required bool enabled}) =>
+      _prefs.setBool(_notificationsEnabledKey, enabled);
+
+  /// Gets the budget alert threshold (0.0 to 1.0, default 0.8).
+  double get budgetAlertThreshold =>
+      _prefs.getDouble(_budgetAlertThresholdKey) ?? 0.8;
+
+  /// Sets the budget alert threshold.
+  Future<bool> setBudgetAlertThreshold(double threshold) =>
+      _prefs.setDouble(_budgetAlertThresholdKey, threshold);
+
+  /// Whether daily transaction reminders are enabled.
+  bool get isDailyReminderEnabled =>
+      _prefs.getBool(_dailyReminderEnabledKey) ?? true;
+
+  /// Toggles daily reminders.
+  Future<bool> setDailyReminderEnabled({required bool enabled}) =>
+      _prefs.setBool(_dailyReminderEnabledKey, enabled);
+
   // -- Generic --
 
   /// Reads a string value by [key].
