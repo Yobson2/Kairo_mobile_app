@@ -14,13 +14,15 @@ abstract class BudgetCategoryModel with _$BudgetCategoryModel {
 
   const factory BudgetCategoryModel({
     required String id,
-    required String budgetId,
-    required String categoryId,
-    required String groupName,
-    required double allocatedAmount,
-    double? allocatedPercentage,
-    required DateTime createdAt,
-    @Default(false) bool isSynced,
+    @JsonKey(name: 'budget_id') required String budgetId,
+    @JsonKey(name: 'category_id') required String categoryId,
+    @JsonKey(name: 'group_name') required String groupName,
+    @JsonKey(name: 'allocated_amount') required double allocatedAmount,
+    @JsonKey(name: 'allocated_percentage') double? allocatedPercentage,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @Default(false)
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    bool isSynced,
   }) = _BudgetCategoryModel;
 
   /// Creates a [BudgetCategoryModel] from JSON.

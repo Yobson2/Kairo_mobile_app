@@ -7,12 +7,11 @@ part of 'auth_providers.dart';
 // **************************************************************************
 
 String _$authRemoteDataSourceHash() =>
-    r'8d1700ef3c133ff115d593c3a75331cc14959f56';
+    r'd7423e28c50e9ebeda98c64e46baaa91ee35f3b9';
 
 /// Provides the [AuthRemoteDataSource].
 ///
 /// Set `USE_MOCK_AUTH=true` in `.env` to use mock data for testing.
-/// TODO(dev): Remove the mock branch when switching to the real API.
 ///
 /// Copied from [authRemoteDataSource].
 @ProviderFor(authRemoteDataSource)
@@ -188,5 +187,49 @@ final getCachedUserUseCaseProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetCachedUserUseCaseRef = AutoDisposeProviderRef<GetCachedUserUseCase>;
+String _$signInWithGoogleUseCaseHash() =>
+    r'665c8b7cec97ca0c16454bfd4072aeac9e931ed9';
+
+/// Provides the [SignInWithGoogleUseCase].
+///
+/// Copied from [signInWithGoogleUseCase].
+@ProviderFor(signInWithGoogleUseCase)
+final signInWithGoogleUseCaseProvider =
+    AutoDisposeProvider<SignInWithGoogleUseCase>.internal(
+  signInWithGoogleUseCase,
+  name: r'signInWithGoogleUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$signInWithGoogleUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SignInWithGoogleUseCaseRef
+    = AutoDisposeProviderRef<SignInWithGoogleUseCase>;
+String _$signInWithAppleUseCaseHash() =>
+    r'a89a01601f720915a592b283e898b090fb6069d0';
+
+/// Provides the [SignInWithAppleUseCase].
+///
+/// Copied from [signInWithAppleUseCase].
+@ProviderFor(signInWithAppleUseCase)
+final signInWithAppleUseCaseProvider =
+    AutoDisposeProvider<SignInWithAppleUseCase>.internal(
+  signInWithAppleUseCase,
+  name: r'signInWithAppleUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$signInWithAppleUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SignInWithAppleUseCaseRef
+    = AutoDisposeProviderRef<SignInWithAppleUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -7,11 +7,11 @@ part of 'budgets_providers.dart';
 // **************************************************************************
 
 String _$budgetsRemoteDataSourceHash() =>
-    r'825f6c83263e36966234382214da08da3b869c53';
+    r'b3244ce8f85fc3e10f0d726cbce2b59e28812aa7';
 
 /// Provides the [BudgetsRemoteDataSource].
 ///
-/// Uses mock implementation when `USE_MOCK_AUTH=true` in `.env`.
+/// Uses mock implementation when `USE_MOCK_BUDGETS=true` in `.env`.
 ///
 /// Copied from [budgetsRemoteDataSource].
 @ProviderFor(budgetsRemoteDataSource)

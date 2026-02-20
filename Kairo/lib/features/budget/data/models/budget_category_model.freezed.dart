@@ -16,12 +16,19 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BudgetCategoryModel {
   String get id;
+  @JsonKey(name: 'budget_id')
   String get budgetId;
+  @JsonKey(name: 'category_id')
   String get categoryId;
+  @JsonKey(name: 'group_name')
   String get groupName;
+  @JsonKey(name: 'allocated_amount')
   double get allocatedAmount;
+  @JsonKey(name: 'allocated_percentage')
   double? get allocatedPercentage;
+  @JsonKey(name: 'created_at')
   DateTime get createdAt;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool get isSynced;
 
   /// Create a copy of BudgetCategoryModel
@@ -76,13 +83,13 @@ abstract mixin class $BudgetCategoryModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String budgetId,
-      String categoryId,
-      String groupName,
-      double allocatedAmount,
-      double? allocatedPercentage,
-      DateTime createdAt,
-      bool isSynced});
+      @JsonKey(name: 'budget_id') String budgetId,
+      @JsonKey(name: 'category_id') String categoryId,
+      @JsonKey(name: 'group_name') String groupName,
+      @JsonKey(name: 'allocated_amount') double allocatedAmount,
+      @JsonKey(name: 'allocated_percentage') double? allocatedPercentage,
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
 
 /// @nodoc
@@ -149,12 +156,13 @@ class _$BudgetCategoryModelCopyWithImpl<$Res>
 class _BudgetCategoryModel extends BudgetCategoryModel {
   const _BudgetCategoryModel(
       {required this.id,
-      required this.budgetId,
-      required this.categoryId,
-      required this.groupName,
-      required this.allocatedAmount,
-      this.allocatedPercentage,
-      required this.createdAt,
+      @JsonKey(name: 'budget_id') required this.budgetId,
+      @JsonKey(name: 'category_id') required this.categoryId,
+      @JsonKey(name: 'group_name') required this.groupName,
+      @JsonKey(name: 'allocated_amount') required this.allocatedAmount,
+      @JsonKey(name: 'allocated_percentage') this.allocatedPercentage,
+      @JsonKey(name: 'created_at') required this.createdAt,
+      @JsonKey(includeFromJson: false, includeToJson: false)
       this.isSynced = false})
       : super._();
   factory _BudgetCategoryModel.fromJson(Map<String, dynamic> json) =>
@@ -163,19 +171,25 @@ class _BudgetCategoryModel extends BudgetCategoryModel {
   @override
   final String id;
   @override
+  @JsonKey(name: 'budget_id')
   final String budgetId;
   @override
+  @JsonKey(name: 'category_id')
   final String categoryId;
   @override
+  @JsonKey(name: 'group_name')
   final String groupName;
   @override
+  @JsonKey(name: 'allocated_amount')
   final double allocatedAmount;
   @override
+  @JsonKey(name: 'allocated_percentage')
   final double? allocatedPercentage;
   @override
+  @JsonKey(name: 'created_at')
   final DateTime createdAt;
   @override
-  @JsonKey()
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final bool isSynced;
 
   /// Create a copy of BudgetCategoryModel
@@ -237,13 +251,13 @@ abstract mixin class _$BudgetCategoryModelCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      String budgetId,
-      String categoryId,
-      String groupName,
-      double allocatedAmount,
-      double? allocatedPercentage,
-      DateTime createdAt,
-      bool isSynced});
+      @JsonKey(name: 'budget_id') String budgetId,
+      @JsonKey(name: 'category_id') String categoryId,
+      @JsonKey(name: 'group_name') String groupName,
+      @JsonKey(name: 'allocated_amount') double allocatedAmount,
+      @JsonKey(name: 'allocated_percentage') double? allocatedPercentage,
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
 
 /// @nodoc

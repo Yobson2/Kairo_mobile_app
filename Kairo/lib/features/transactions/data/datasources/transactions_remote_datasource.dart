@@ -1,7 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:kairo/core/error/exceptions.dart';
-import 'package:kairo/core/network/api_endpoints.dart';
 import 'package:kairo/features/transactions/data/models/transaction_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Remote data source for transactions API calls.
 abstract class TransactionsRemoteDataSource {
@@ -22,100 +21,89 @@ abstract class TransactionsRemoteDataSource {
   Future<void> deleteTransaction(String id);
 }
 
-/// Implementation of [TransactionsRemoteDataSource] using [Dio].
-class TransactionsRemoteDataSourceImpl implements TransactionsRemoteDataSource {
-  /// Creates a [TransactionsRemoteDataSourceImpl].
-  const TransactionsRemoteDataSourceImpl(this._dio);
+/// Implementation of [TransactionsRemoteDataSource] using Supabase.
+class SupabaseTransactionsRemoteDataSource
+    implements TransactionsRemoteDataSource {
+  /// Creates a [SupabaseTransactionsRemoteDataSource].
+  const SupabaseTransactionsRemoteDataSource(this._supabase);
 
-  final Dio _dio;
+  final SupabaseClient _supabase;
+
+  String get _userId => _supabase.auth.currentUser!.id;
+  SupabaseQueryBuilder get _table => _supabase.from('transactions');
 
   @override
   Future<List<TransactionModel>> getAllTransactions() async {
     try {
-      final response = await _dio.get<List<dynamic>>(
-        ApiEndpoints.transactions,
-      );
-      final data = response.data;
-      if (data == null) {
-        throw const ServerException(message: 'Empty response from server');
-      }
+      final data = await _table
+          .select()
+          .eq('user_id', _userId)
+          .order('date', ascending: false);
       return data
           .cast<Map<String, dynamic>>()
           .map(TransactionModel.fromJson)
           .toList();
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
 
   @override
   Future<TransactionModel> getTransactionById(String id) async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>(
-        '${ApiEndpoints.transactions}/$id',
-      );
-      final data = response.data;
-      if (data == null) {
-        throw const ServerException(message: 'Empty response from server');
-      }
+      final data = await _table
+          .select()
+          .eq('id', id)
+          .eq('user_id', _userId)
+          .single();
       return TransactionModel.fromJson(data);
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
 
   @override
   Future<TransactionModel> createTransaction(TransactionModel model) async {
     try {
-      final response = await _dio.post<Map<String, dynamic>>(
-        ApiEndpoints.transactions,
-        data: model.toJson(),
-      );
-      final data = response.data;
-      if (data == null) {
-        throw const ServerException(message: 'Empty response from server');
-      }
+      final payload = model.toJson()
+        ..['user_id'] = _userId
+        ..remove('server_id');
+      final data = await _table.insert(payload).select().single();
       return TransactionModel.fromJson(data);
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
 
   @override
   Future<TransactionModel> updateTransaction(TransactionModel model) async {
     try {
-      final response = await _dio.put<Map<String, dynamic>>(
-        '${ApiEndpoints.transactions}/${model.id}',
-        data: model.toJson(),
-      );
-      final data = response.data;
-      if (data == null) {
-        throw const ServerException(message: 'Empty response from server');
-      }
+      final payload = model.toJson()
+        ..remove('server_id')
+        ..remove('user_id');
+      final data = await _table
+          .update(payload)
+          .eq('id', model.id)
+          .eq('user_id', _userId)
+          .select()
+          .single();
       return TransactionModel.fromJson(data);
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
 
   @override
   Future<void> deleteTransaction(String id) async {
     try {
-      await _dio.delete<void>('${ApiEndpoints.transactions}/$id');
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+      await _table.delete().eq('id', id).eq('user_id', _userId);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
+
+  static int? _parseCode(PostgrestException e) =>
+      e.code != null ? int.tryParse(e.code!) : null;
 }
 
 /// Mock implementation of [TransactionsRemoteDataSource] for development.

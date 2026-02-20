@@ -7,7 +7,7 @@ part of 'savings_providers.dart';
 // **************************************************************************
 
 String _$savingsRemoteDataSourceHash() =>
-    r'0b5a17c349ff3b628ccae422375d0aa4884e3d43';
+    r'c7b3e1506c8d83628c395225d9e63ea751ef0163';
 
 /// Provides the [SavingsRemoteDataSource].
 ///

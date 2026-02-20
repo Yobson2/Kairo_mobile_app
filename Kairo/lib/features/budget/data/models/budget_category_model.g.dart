@@ -9,24 +9,22 @@ part of 'budget_category_model.dart';
 _BudgetCategoryModel _$BudgetCategoryModelFromJson(Map<String, dynamic> json) =>
     _BudgetCategoryModel(
       id: json['id'] as String,
-      budgetId: json['budgetId'] as String,
-      categoryId: json['categoryId'] as String,
-      groupName: json['groupName'] as String,
-      allocatedAmount: (json['allocatedAmount'] as num).toDouble(),
-      allocatedPercentage: (json['allocatedPercentage'] as num?)?.toDouble(),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      isSynced: json['isSynced'] as bool? ?? false,
+      budgetId: json['budget_id'] as String,
+      categoryId: json['category_id'] as String,
+      groupName: json['group_name'] as String,
+      allocatedAmount: (json['allocated_amount'] as num).toDouble(),
+      allocatedPercentage: (json['allocated_percentage'] as num?)?.toDouble(),
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$BudgetCategoryModelToJson(
         _BudgetCategoryModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'budgetId': instance.budgetId,
-      'categoryId': instance.categoryId,
-      'groupName': instance.groupName,
-      'allocatedAmount': instance.allocatedAmount,
-      'allocatedPercentage': instance.allocatedPercentage,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'isSynced': instance.isSynced,
+      'budget_id': instance.budgetId,
+      'category_id': instance.categoryId,
+      'group_name': instance.groupName,
+      'allocated_amount': instance.allocatedAmount,
+      'allocated_percentage': instance.allocatedPercentage,
+      'created_at': instance.createdAt.toIso8601String(),
     };

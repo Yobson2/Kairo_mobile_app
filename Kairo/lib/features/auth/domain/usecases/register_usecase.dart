@@ -1,18 +1,20 @@
 import 'package:dartz/dartz.dart';
 import 'package:kairo/core/error/failures.dart';
 import 'package:kairo/core/usecase/usecase.dart';
-import 'package:kairo/features/auth/domain/entities/user.dart';
 import 'package:kairo/features/auth/domain/repositories/auth_repository.dart';
 
-/// Registers a new user account.
-class RegisterUseCase extends UseCase<User, RegisterParams> {
+/// Registers a new user account via Supabase.
+///
+/// Creates the account and sends a confirmation OTP.
+/// The user is **not** authenticated until the OTP is verified.
+class RegisterUseCase extends UseCase<void, RegisterParams> {
   /// Creates a [RegisterUseCase].
   const RegisterUseCase(this._repository);
 
   final AuthRepository _repository;
 
   @override
-  Future<Either<Failure, User>> call(RegisterParams params) {
+  Future<Either<Failure, void>> call(RegisterParams params) {
     return _repository.register(
       name: params.name,
       email: params.email,

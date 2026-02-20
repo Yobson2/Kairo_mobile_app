@@ -1,7 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:kairo/core/error/exceptions.dart';
-import 'package:kairo/core/network/api_endpoints.dart';
 import 'package:kairo/features/budget/data/models/budget_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Remote data source for budgets API calls.
 abstract class BudgetsRemoteDataSource {
@@ -21,97 +20,88 @@ abstract class BudgetsRemoteDataSource {
   Future<void> deleteBudget(String id);
 }
 
-/// Implementation of [BudgetsRemoteDataSource] using [Dio].
-class BudgetsRemoteDataSourceImpl implements BudgetsRemoteDataSource {
-  const BudgetsRemoteDataSourceImpl(this._dio);
+/// Implementation of [BudgetsRemoteDataSource] using Supabase.
+class SupabaseBudgetsRemoteDataSource implements BudgetsRemoteDataSource {
+  /// Creates a [SupabaseBudgetsRemoteDataSource].
+  const SupabaseBudgetsRemoteDataSource(this._supabase);
 
-  final Dio _dio;
+  final SupabaseClient _supabase;
+
+  String get _userId => _supabase.auth.currentUser!.id;
+  SupabaseQueryBuilder get _table => _supabase.from('budgets');
 
   @override
   Future<List<BudgetModel>> getAllBudgets() async {
     try {
-      final response = await _dio.get<List<dynamic>>(ApiEndpoints.budgets);
-      final data = response.data;
-      if (data == null) {
-        throw const ServerException(message: 'Empty response from server');
-      }
+      final data = await _table
+          .select()
+          .eq('user_id', _userId)
+          .order('start_date', ascending: false);
       return data
           .cast<Map<String, dynamic>>()
           .map(BudgetModel.fromJson)
           .toList();
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
 
   @override
   Future<BudgetModel> getBudgetById(String id) async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>(
-        '${ApiEndpoints.budgets}/$id',
-      );
-      final data = response.data;
-      if (data == null) {
-        throw const ServerException(message: 'Empty response from server');
-      }
+      final data = await _table
+          .select()
+          .eq('id', id)
+          .eq('user_id', _userId)
+          .single();
       return BudgetModel.fromJson(data);
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
 
   @override
   Future<BudgetModel> createBudget(BudgetModel model) async {
     try {
-      final response = await _dio.post<Map<String, dynamic>>(
-        ApiEndpoints.budgets,
-        data: model.toJson(),
-      );
-      final data = response.data;
-      if (data == null) {
-        throw const ServerException(message: 'Empty response from server');
-      }
+      final payload = model.toJson()
+        ..['user_id'] = _userId
+        ..remove('server_id');
+      final data = await _table.insert(payload).select().single();
       return BudgetModel.fromJson(data);
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
 
   @override
   Future<BudgetModel> updateBudget(BudgetModel model) async {
     try {
-      final response = await _dio.put<Map<String, dynamic>>(
-        '${ApiEndpoints.budgets}/${model.id}',
-        data: model.toJson(),
-      );
-      final data = response.data;
-      if (data == null) {
-        throw const ServerException(message: 'Empty response from server');
-      }
+      final payload = model.toJson()
+        ..remove('server_id')
+        ..remove('user_id');
+      final data = await _table
+          .update(payload)
+          .eq('id', model.id)
+          .eq('user_id', _userId)
+          .select()
+          .single();
       return BudgetModel.fromJson(data);
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
 
   @override
   Future<void> deleteBudget(String id) async {
     try {
-      await _dio.delete<void>('${ApiEndpoints.budgets}/$id');
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+      await _table.delete().eq('id', id).eq('user_id', _userId);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
+
+  static int? _parseCode(PostgrestException e) =>
+      e.code != null ? int.tryParse(e.code!) : null;
 }
 
 // coverage:ignore-file

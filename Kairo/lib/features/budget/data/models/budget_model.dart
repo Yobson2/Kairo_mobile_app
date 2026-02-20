@@ -15,17 +15,19 @@ abstract class BudgetModel with _$BudgetModel {
 
   const factory BudgetModel({
     required String id,
-    String? serverId,
+    @JsonKey(name: 'server_id') String? serverId,
     required String name,
     required String strategy,
     required String period,
-    required DateTime startDate,
-    required DateTime endDate,
-    double? totalIncome,
-    @Default(true) bool isPercentageBased,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-    @Default(false) bool isSynced,
+    @JsonKey(name: 'start_date') required DateTime startDate,
+    @JsonKey(name: 'end_date') required DateTime endDate,
+    @JsonKey(name: 'total_income') double? totalIncome,
+    @Default(true) @JsonKey(name: 'is_percentage_based') bool isPercentageBased,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @Default(false)
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    bool isSynced,
   }) = _BudgetModel;
 
   /// Creates a [BudgetModel] from JSON.

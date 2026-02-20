@@ -2,6 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kairo/core/database/database_providers.dart';
 import 'package:kairo/core/providers/network_providers.dart';
+import 'package:kairo/core/providers/supabase_provider.dart';
 import 'package:kairo/core/sync/sync_providers.dart';
 
 import 'package:kairo/features/budget/data/datasources/budgets_local_datasource.dart';
@@ -21,12 +22,13 @@ part 'budgets_providers.g.dart';
 
 /// Provides the [BudgetsRemoteDataSource].
 ///
-/// Uses mock implementation when `USE_MOCK_AUTH=true` in `.env`.
+/// Uses mock implementation when `USE_MOCK_BUDGETS=true` in `.env`.
 @riverpod
 BudgetsRemoteDataSource budgetsRemoteDataSource(Ref ref) {
-  final useMock = dotenv.get('USE_MOCK_AUTH', fallback: 'false') == 'true';
+  final useMock =
+      dotenv.get('USE_MOCK_BUDGETS', fallback: 'false') == 'true';
   if (useMock) return MockBudgetsRemoteDataSource();
-  return BudgetsRemoteDataSourceImpl(ref.watch(dioProvider));
+  return SupabaseBudgetsRemoteDataSource(ref.watch(supabaseClientProvider));
 }
 
 /// Provides the [BudgetsLocalDataSource].

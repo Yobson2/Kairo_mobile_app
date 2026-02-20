@@ -42,7 +42,7 @@ final networkInfoProvider = Provider<NetworkInfo>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef NetworkInfoRef = ProviderRef<NetworkInfo>;
-String _$dioHash() => r'15834bf3abf57cad57f1e52ed25b1d40774c3d80';
+String _$dioHash() => r'b04eabf21e072b3803deb4817661813bbe903a76';
 
 /// Provides the configured [Dio] HTTP client.
 ///

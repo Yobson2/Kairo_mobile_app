@@ -1,10 +1,11 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kairo/core/config/env_provider.dart';
 import 'package:kairo/core/providers/network_providers.dart';
 import 'package:kairo/core/providers/storage_providers.dart';
+import 'package:kairo/core/providers/supabase_provider.dart';
 import 'package:kairo/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:kairo/features/auth/data/datasources/auth_remote_datasource.dart';
-// TODO(dev): Remove mock import when switching to the real API.
 import 'package:kairo/features/auth/data/datasources/mock_auth_remote_datasource.dart';
 import 'package:kairo/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:kairo/features/auth/domain/repositories/auth_repository.dart';
@@ -13,6 +14,8 @@ import 'package:kairo/features/auth/domain/usecases/get_cached_user_usecase.dart
 import 'package:kairo/features/auth/domain/usecases/login_usecase.dart';
 import 'package:kairo/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:kairo/features/auth/domain/usecases/register_usecase.dart';
+import 'package:kairo/features/auth/domain/usecases/sign_in_with_apple_usecase.dart';
+import 'package:kairo/features/auth/domain/usecases/sign_in_with_google_usecase.dart';
 import 'package:kairo/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,12 +24,17 @@ part 'auth_providers.g.dart';
 /// Provides the [AuthRemoteDataSource].
 ///
 /// Set `USE_MOCK_AUTH=true` in `.env` to use mock data for testing.
-/// TODO(dev): Remove the mock branch when switching to the real API.
 @riverpod
 AuthRemoteDataSource authRemoteDataSource(Ref ref) {
   final useMock = dotenv.get('USE_MOCK_AUTH', fallback: 'false') == 'true';
   if (useMock) return MockAuthRemoteDataSource();
-  return AuthRemoteDataSourceImpl(ref.watch(dioProvider));
+
+  final env = ref.watch(envProvider);
+  return SupabaseAuthRemoteDataSource(
+    supabaseClient: ref.watch(supabaseClientProvider),
+    googleWebClientId: env.googleWebClientId,
+    googleIosClientId: env.googleIosClientId,
+  );
 }
 
 /// Provides the [AuthLocalDataSource].
@@ -82,4 +90,16 @@ LogoutUseCase logoutUseCase(Ref ref) {
 @riverpod
 GetCachedUserUseCase getCachedUserUseCase(Ref ref) {
   return GetCachedUserUseCase(ref.watch(authRepositoryProvider));
+}
+
+/// Provides the [SignInWithGoogleUseCase].
+@riverpod
+SignInWithGoogleUseCase signInWithGoogleUseCase(Ref ref) {
+  return SignInWithGoogleUseCase(ref.watch(authRepositoryProvider));
+}
+
+/// Provides the [SignInWithAppleUseCase].
+@riverpod
+SignInWithAppleUseCase signInWithAppleUseCase(Ref ref) {
+  return SignInWithAppleUseCase(ref.watch(authRepositoryProvider));
 }

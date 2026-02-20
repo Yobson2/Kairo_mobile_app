@@ -16,6 +16,14 @@ abstract final class RouteNames {
   static const String forgotPasswordName = 'forgotPassword';
   static const String otpVerification = '/otp-verification';
   static const String otpVerificationName = 'otpVerification';
+  static const String createPassword = '/create-password';
+  static const String createPasswordName = 'createPassword';
+
+  // -- Legal --
+  static const String termsOfService = '/terms';
+  static const String termsOfServiceName = 'termsOfService';
+  static const String privacyPolicy = '/privacy';
+  static const String privacyPolicyName = 'privacyPolicy';
 
   // -- Main Shell --
   static const String dashboard = '/dashboard';

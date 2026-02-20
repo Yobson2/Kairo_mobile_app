@@ -16,16 +16,24 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BudgetModel {
   String get id;
+  @JsonKey(name: 'server_id')
   String? get serverId;
   String get name;
   String get strategy;
   String get period;
+  @JsonKey(name: 'start_date')
   DateTime get startDate;
+  @JsonKey(name: 'end_date')
   DateTime get endDate;
+  @JsonKey(name: 'total_income')
   double? get totalIncome;
+  @JsonKey(name: 'is_percentage_based')
   bool get isPercentageBased;
+  @JsonKey(name: 'created_at')
   DateTime get createdAt;
+  @JsonKey(name: 'updated_at')
   DateTime get updatedAt;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool get isSynced;
 
   /// Create a copy of BudgetModel
@@ -96,17 +104,17 @@ abstract mixin class $BudgetModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String? serverId,
+      @JsonKey(name: 'server_id') String? serverId,
       String name,
       String strategy,
       String period,
-      DateTime startDate,
-      DateTime endDate,
-      double? totalIncome,
-      bool isPercentageBased,
-      DateTime createdAt,
-      DateTime updatedAt,
-      bool isSynced});
+      @JsonKey(name: 'start_date') DateTime startDate,
+      @JsonKey(name: 'end_date') DateTime endDate,
+      @JsonKey(name: 'total_income') double? totalIncome,
+      @JsonKey(name: 'is_percentage_based') bool isPercentageBased,
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
 
 /// @nodoc
@@ -192,16 +200,17 @@ class _$BudgetModelCopyWithImpl<$Res> implements $BudgetModelCopyWith<$Res> {
 class _BudgetModel extends BudgetModel {
   const _BudgetModel(
       {required this.id,
-      this.serverId,
+      @JsonKey(name: 'server_id') this.serverId,
       required this.name,
       required this.strategy,
       required this.period,
-      required this.startDate,
-      required this.endDate,
-      this.totalIncome,
-      this.isPercentageBased = true,
-      required this.createdAt,
-      required this.updatedAt,
+      @JsonKey(name: 'start_date') required this.startDate,
+      @JsonKey(name: 'end_date') required this.endDate,
+      @JsonKey(name: 'total_income') this.totalIncome,
+      @JsonKey(name: 'is_percentage_based') this.isPercentageBased = true,
+      @JsonKey(name: 'created_at') required this.createdAt,
+      @JsonKey(name: 'updated_at') required this.updatedAt,
+      @JsonKey(includeFromJson: false, includeToJson: false)
       this.isSynced = false})
       : super._();
   factory _BudgetModel.fromJson(Map<String, dynamic> json) =>
@@ -210,6 +219,7 @@ class _BudgetModel extends BudgetModel {
   @override
   final String id;
   @override
+  @JsonKey(name: 'server_id')
   final String? serverId;
   @override
   final String name;
@@ -218,20 +228,25 @@ class _BudgetModel extends BudgetModel {
   @override
   final String period;
   @override
+  @JsonKey(name: 'start_date')
   final DateTime startDate;
   @override
+  @JsonKey(name: 'end_date')
   final DateTime endDate;
   @override
+  @JsonKey(name: 'total_income')
   final double? totalIncome;
   @override
-  @JsonKey()
+  @JsonKey(name: 'is_percentage_based')
   final bool isPercentageBased;
   @override
+  @JsonKey(name: 'created_at')
   final DateTime createdAt;
   @override
+  @JsonKey(name: 'updated_at')
   final DateTime updatedAt;
   @override
-  @JsonKey()
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final bool isSynced;
 
   /// Create a copy of BudgetModel
@@ -309,17 +324,17 @@ abstract mixin class _$BudgetModelCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      String? serverId,
+      @JsonKey(name: 'server_id') String? serverId,
       String name,
       String strategy,
       String period,
-      DateTime startDate,
-      DateTime endDate,
-      double? totalIncome,
-      bool isPercentageBased,
-      DateTime createdAt,
-      DateTime updatedAt,
-      bool isSynced});
+      @JsonKey(name: 'start_date') DateTime startDate,
+      @JsonKey(name: 'end_date') DateTime endDate,
+      @JsonKey(name: 'total_income') double? totalIncome,
+      @JsonKey(name: 'is_percentage_based') bool isPercentageBased,
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
 
 /// @nodoc

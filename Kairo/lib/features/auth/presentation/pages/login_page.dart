@@ -152,8 +152,14 @@ class _LoginPageState extends ConsumerState<LoginPage>
                     SocialLoginButtons(
                       googleLabel: context.l10n.authLoginWithGoogle,
                       appleLabel: context.l10n.authLoginWithApple,
+                      onGooglePressed: () => ref
+                          .read(authNotifierProvider.notifier)
+                          .signInWithGoogle(),
+                      onApplePressed: () => ref
+                          .read(authNotifierProvider.notifier)
+                          .signInWithApple(),
                     ),
-                    AppSpacing.verticalXl,
+                    //  AppSpacing.verticalXl,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

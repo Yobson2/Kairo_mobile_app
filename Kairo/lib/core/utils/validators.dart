@@ -82,6 +82,21 @@ class Validators {
     return null;
   }
 
+  /// Returns the number of password rules satisfied (0–5).
+  ///
+  /// Rules: length >= 8, has uppercase, has lowercase, has digit,
+  /// has special character.
+  static int passwordStrength(String? value) {
+    if (value == null || value.isEmpty) return 0;
+    var score = 0;
+    if (value.length >= 8) score++;
+    if (value.contains(RegExp('[A-Z]'))) score++;
+    if (value.contains(RegExp('[a-z]'))) score++;
+    if (value.contains(RegExp('[0-9]'))) score++;
+    if (value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) score++;
+    return score;
+  }
+
   /// Combines multiple validators, returning the first error found.
   static String? Function(String?) compose(
     List<String? Function(String?)> validators,

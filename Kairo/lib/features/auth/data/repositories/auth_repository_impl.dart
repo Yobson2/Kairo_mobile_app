@@ -37,7 +37,9 @@ class AuthRepositoryImpl implements AuthRepository {
       await _local.cacheUser(result.user);
       return Right(result.user.toEntity());
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
+      return Left(
+        ServerFailure(message: e.message, statusCode: e.statusCode),
+      );
     } on UnauthorizedException catch (e) {
       return Left(UnauthorizedFailure(message: e.message));
     } on NetworkException {
@@ -46,7 +48,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> register({
+  Future<Either<Failure, void>> register({
     required String name,
     required String email,
     required String password,
@@ -55,16 +57,35 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Left(NetworkFailure());
     }
     try {
-      final result = await _remote.register(
-        name: name,
-        email: email,
-        password: password,
-      );
-      await _local.cacheTokens(result.tokens);
-      await _local.cacheUser(result.user);
-      return Right(result.user.toEntity());
+      await _remote.register(name: name, email: email, password: password);
+      return const Right(null);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
+      return Left(
+        ServerFailure(message: e.message, statusCode: e.statusCode),
+      );
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, User?>> verifyOtp({
+    required String email,
+    required String code,
+  }) async {
+    if (!await _networkInfo.isConnected) {
+      return const Left(NetworkFailure());
+    }
+    try {
+      final result = await _remote.verifyOtp(email: email, code: code);
+      if (result != null) {
+        await _local.cacheTokens(result.tokens);
+        await _local.cacheUser(result.user);
+        return Right(result.user.toEntity());
+      }
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
     } on NetworkException {
       return const Left(NetworkFailure());
     }
@@ -79,24 +100,6 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     try {
       await _remote.forgotPassword(email: email);
-      return const Right(null);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } on NetworkException {
-      return const Left(NetworkFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> verifyOtp({
-    required String email,
-    required String code,
-  }) async {
-    if (!await _networkInfo.isConnected) {
-      return const Left(NetworkFailure());
-    }
-    try {
-      await _remote.verifyOtp(email: email, code: code);
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
@@ -133,4 +136,38 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> get isAuthenticated => _local.hasToken();
+
+  @override
+  Future<Either<Failure, User>> signInWithGoogle() async {
+    if (!await _networkInfo.isConnected) {
+      return const Left(NetworkFailure());
+    }
+    try {
+      final result = await _remote.signInWithGoogle();
+      await _local.cacheTokens(result.tokens);
+      await _local.cacheUser(result.user);
+      return Right(result.user.toEntity());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> signInWithApple() async {
+    if (!await _networkInfo.isConnected) {
+      return const Left(NetworkFailure());
+    }
+    try {
+      final result = await _remote.signInWithApple();
+      await _local.cacheTokens(result.tokens);
+      await _local.cacheUser(result.user);
+      return Right(result.user.toEntity());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    }
+  }
 }

@@ -3,7 +3,7 @@ import 'package:kairo/core/config/env.dart';
 import 'package:kairo/core/network/interceptors/auth_interceptor.dart';
 import 'package:kairo/core/network/interceptors/error_interceptor.dart';
 import 'package:kairo/core/network/interceptors/logging_interceptor.dart';
-import 'package:kairo/core/storage/secure_storage.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Factory for creating a configured [Dio] instance.
 ///
@@ -14,7 +14,7 @@ class DioClient {
   /// Creates a [Dio] instance configured for the given [env].
   static Dio create({
     required Env env,
-    required SecureStorage secureStorage,
+    required SupabaseClient supabaseClient,
   }) {
     final dio = Dio(
       BaseOptions(
@@ -34,7 +34,7 @@ class DioClient {
     // LoggingInterceptor goes first for visibility.
     dio.interceptors.addAll([
       if (env.enableLogging) LoggingInterceptor(),
-      AuthInterceptor(secureStorage: secureStorage, dio: dio),
+      AuthInterceptor(supabaseClient: supabaseClient, dio: dio),
       ErrorInterceptor(),
     ]);
 

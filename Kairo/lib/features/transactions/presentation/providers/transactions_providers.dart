@@ -2,6 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kairo/core/database/database_providers.dart';
 import 'package:kairo/core/providers/network_providers.dart';
+import 'package:kairo/core/providers/supabase_provider.dart';
 import 'package:kairo/core/sync/sync_providers.dart';
 import 'package:kairo/features/transactions/data/datasources/transactions_local_datasource.dart';
 import 'package:kairo/features/transactions/data/datasources/transactions_remote_datasource.dart';
@@ -27,7 +28,9 @@ TransactionsRemoteDataSource transactionsRemoteDataSource(Ref ref) {
   final useMock =
       dotenv.get('USE_MOCK_TRANSACTIONS', fallback: 'false') == 'true';
   if (useMock) return MockTransactionsRemoteDataSource();
-  return TransactionsRemoteDataSourceImpl(ref.watch(dioProvider));
+  return SupabaseTransactionsRemoteDataSource(
+    ref.watch(supabaseClientProvider),
+  );
 }
 
 /// Provides the [TransactionsLocalDataSource].

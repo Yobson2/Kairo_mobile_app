@@ -12,6 +12,9 @@ class ApiEndpoints {
   /// POST: Register a new user.
   static const String register = '/auth/register';
 
+  /// POST: Send registration OTP code.
+  static const String sendRegistrationOtp = '/auth/send-registration-otp';
+
   /// POST: Request password reset email.
   static const String forgotPassword = '/auth/forgot-password';
 

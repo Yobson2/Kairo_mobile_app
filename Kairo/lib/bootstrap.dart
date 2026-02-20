@@ -13,6 +13,7 @@ import 'package:kairo/core/providers/storage_providers.dart';
 import 'package:kairo/core/services/crash_reporter.dart';
 import 'package:kairo/core/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Bootstraps the application with the given [env] configuration.
 ///
@@ -23,6 +24,12 @@ Future<void> bootstrap(Env env, {CrashReporter? crashReporter}) async {
 
   // Load environment variables from .env file.
   await loadEnv();
+
+  // Initialize Supabase before anything else that depends on it.
+  await Supabase.initialize(
+    url: env.baseUrl,
+    anonKey: env.supabaseAnonKey,
+  );
 
   // Lock orientation to portrait.
   await SystemChrome.setPreferredOrientations([

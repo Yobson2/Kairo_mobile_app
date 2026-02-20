@@ -29,28 +29,32 @@ class SocialLoginButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
+    return Row(
       children: [
-        _SocialButton(
-          onPressed: onGooglePressed,
-          icon: SvgPicture.asset(
-            'assets/images/google.svg',
-            width: 20,
-            height: 20,
+        Expanded(
+          child: _SocialButton(
+            onPressed: onGooglePressed,
+            icon: SvgPicture.asset(
+              'assets/images/google.svg',
+              width: 20,
+              height: 20,
+            ),
+            label: googleLabel,
+            theme: theme,
           ),
-          label: googleLabel,
-          theme: theme,
         ),
-        AppSpacing.verticalMd,
-        _SocialButton(
-          onPressed: onApplePressed,
-          icon: Icon(
-            Icons.apple,
-            size: 24,
-            color: theme.colorScheme.onSurface,
+        AppSpacing.horizontalMd,
+        Expanded(
+          child: _SocialButton(
+            onPressed: onApplePressed,
+            icon: Icon(
+              Icons.apple,
+              size: 24,
+              color: theme.colorScheme.onSurface,
+            ),
+            label: appleLabel,
+            theme: theme,
           ),
-          label: appleLabel,
-          theme: theme,
         ),
       ],
     );
@@ -73,7 +77,6 @@ class _SocialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
       height: 52,
       child: OutlinedButton(
         onPressed: onPressed,
@@ -84,14 +87,7 @@ class _SocialButton extends StatelessWidget {
             borderRadius: AppRadius.borderRadiusMd,
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            icon,
-            AppSpacing.horizontalSm,
-            Text(label),
-          ],
-        ),
+        child: icon,
       ),
     );
   }

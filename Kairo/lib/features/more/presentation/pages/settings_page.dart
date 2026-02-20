@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kairo/core/constants/currencies.dart';
 import 'package:kairo/core/extensions/context_extensions.dart';
 import 'package:kairo/core/providers/notification_provider.dart';
 import 'package:kairo/core/providers/storage_providers.dart';
+import 'package:kairo/core/router/route_names.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
 import 'package:kairo/core/theme/theme_provider.dart';
 import 'package:kairo/core/widgets/data_display/app_list_tile.dart';
@@ -147,12 +149,14 @@ class SettingsPage extends ConsumerWidget {
                 leading: const Icon(Icons.description_outlined),
                 title: l10n.settingsTerms,
                 trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(RouteNames.termsOfService),
               ),
               AppSpacing.verticalSm,
               AppListTile(
                 leading: const Icon(Icons.privacy_tip_outlined),
                 title: l10n.settingsPrivacy,
                 trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(RouteNames.privacyPolicy),
               ),
             ],
           ),

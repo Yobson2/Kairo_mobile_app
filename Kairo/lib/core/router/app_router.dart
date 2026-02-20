@@ -6,6 +6,7 @@ import 'package:kairo/core/providers/storage_providers.dart';
 import 'package:kairo/core/router/analytics_observer.dart';
 import 'package:kairo/core/router/page_transitions.dart';
 import 'package:kairo/core/router/route_names.dart';
+import 'package:kairo/features/auth/presentation/pages/create_password_page.dart';
 import 'package:kairo/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:kairo/features/auth/presentation/pages/login_page.dart';
 import 'package:kairo/features/auth/presentation/pages/otp_verification_page.dart';
@@ -15,6 +16,8 @@ import 'package:kairo/features/auth/presentation/providers/auth_state.dart';
 import 'package:kairo/features/budget/presentation/pages/budget_page.dart';
 import 'package:kairo/features/budget/presentation/pages/budget_setup_page.dart';
 import 'package:kairo/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:kairo/features/legal/presentation/pages/privacy_policy_page.dart';
+import 'package:kairo/features/legal/presentation/pages/terms_of_service_page.dart';
 import 'package:kairo/features/main/home_shell.dart';
 import 'package:kairo/features/more/presentation/pages/more_page.dart';
 import 'package:kairo/features/more/presentation/pages/profile_page.dart';
@@ -45,6 +48,9 @@ const _publicPaths = [
   RouteNames.register,
   RouteNames.forgotPassword,
   RouteNames.otpVerification,
+  RouteNames.createPassword,
+  RouteNames.termsOfService,
+  RouteNames.privacyPolicy,
 ];
 
 /// Provides the application [GoRouter] instance.
@@ -144,9 +150,35 @@ GoRouter appRouter(Ref ref) {
         path: RouteNames.otpVerification,
         name: RouteNames.otpVerificationName,
         builder: (context, state) {
-          final email = state.extra as String? ?? '';
-          return OtpVerificationPage(email: email);
+          final extra = state.extra as Map<String, String>? ?? {};
+          return OtpVerificationPage(
+            email: extra['email'] ?? '',
+            name: extra['name'],
+          );
         },
+      ),
+      GoRoute(
+        path: RouteNames.createPassword,
+        name: RouteNames.createPasswordName,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, String>? ?? {};
+          return CreatePasswordPage(
+            name: extra['name'] ?? '',
+            email: extra['email'] ?? '',
+          );
+        },
+      ),
+
+      // Legal pages (accessible with or without auth)
+      GoRoute(
+        path: RouteNames.termsOfService,
+        name: RouteNames.termsOfServiceName,
+        builder: (context, state) => const TermsOfServicePage(),
+      ),
+      GoRoute(
+        path: RouteNames.privacyPolicy,
+        name: RouteNames.privacyPolicyName,
+        builder: (context, state) => const PrivacyPolicyPage(),
       ),
 
       // Add Transaction (root-level modal with parentNavigatorKey)

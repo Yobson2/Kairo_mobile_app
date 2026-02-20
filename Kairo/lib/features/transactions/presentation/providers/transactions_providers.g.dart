@@ -7,7 +7,7 @@ part of 'transactions_providers.dart';
 // **************************************************************************
 
 String _$transactionsRemoteDataSourceHash() =>
-    r'07e20c3b1e2954318c21423945c14bb588a0040d';
+    r'cde025ec48db353c77dd4e608bbb7d3739e0d61d';
 
 /// Provides the [TransactionsRemoteDataSource].
 ///

@@ -1,6 +1,6 @@
 # Kairo Supabase Database Setup
 
-This directory contains all database migrations and setup scripts for the Kairo application.
+This directory contains all database migrations for the Kairo personal finance app.
 
 ## Quick Start
 
@@ -14,137 +14,113 @@ brew install supabase/tap/supabase
 scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
 scoop install supabase
 
-# Or download from: https://github.com/supabase/cli/releases
+# Or via npx (no install needed)
+npx supabase --version
 ```
 
 ### 2. Link to Your Supabase Project
 
 ```bash
-# Login to Supabase
 supabase login
-
-# Link to your project
 supabase link --project-ref YOUR_PROJECT_REF
 ```
 
-You can find your project ref in your Supabase dashboard URL:
-`https://app.supabase.com/project/YOUR_PROJECT_REF`
+Find your project ref in: `https://supabase.com/dashboard/project/YOUR_PROJECT_REF`
 
 ### 3. Run Migrations
 
 ```bash
-# Apply all pending migrations to your Supabase project
 supabase db push
 ```
 
 ## Migration Files
 
-### 20260111000001_initial_schema.sql
-Creates the core database schema:
-- `profiles` - User profile data extending auth.users
-- `allocation_categories` - User-defined categories (Family Support, Savings, etc.)
-- `allocation_strategies` - Saved allocation strategies
-- `strategy_allocations` - Junction table for strategy-category percentages
-- `income_entries` - User income records
-- `allocations` - Actual money allocations
-- `insights` - Learning insights for positive psychology
+### 20260220000001_core_schema.sql
+Core infrastructure:
+- `profiles` table (extends `auth.users` with preferred_currency, preferred_language, onboarding_completed)
+- `update_updated_at_column()` reusable trigger function
+- `handle_new_user()` trigger on `auth.users` INSERT — auto-creates profile and seeds default categories
 
-**Key Features:**
-- Proper foreign key constraints
-- Indexes for performance
-- Auto-updating `updated_at` triggers
-- Validation constraints (percentages, amounts, etc.)
+### 20260220000002_feature_tables.sql
+All feature tables matching the Flutter domain entities:
+- `categories` — user-scoped transaction categories (TEXT PK matching Dart `DefaultCategories` IDs)
+- `transactions` — income/expense/transfer records with mobile money support
+- `budgets` — budget plans with strategy (50/30/20, 80/20, envelope, custom) and period
+- `budget_category_allocations` — per-category allocation within a budget (CASCADE on budget delete)
+- `savings_goals` — goal-based savings with status tracking
+- `savings_contributions` — individual contributions with auto-update trigger on `savings_goals.current_amount`
 
-### 20260111000002_rls_policies.sql
-Implements Row Level Security (RLS) policies:
-- User data isolation (users can only access their own data)
-- Helper functions:
-  - Auto-create profile on user signup
-  - Ensure only one active strategy per user
-  - Auto-expire temporary allocations
+**Indexes:** Optimized for user-scoped queries — `(user_id, date DESC)`, `(user_id, type, date)`, `(user_id, status)`, etc.
 
-### 20260111000003_default_categories_function.sql
-Creates default categories and strategy for new users:
-- 5 default cultural categories:
-  1. Family Support (20%)
-  2. Emergencies (15%)
-  3. Savings (15%)
-  4. Daily Needs (40%)
-  5. Community Contributions (10%)
-- Default "Balanced Allocation" strategy
-- Auto-initialization trigger on user signup
+### 20260220000003_rls_policies.sql
+Row Level Security on all 7 tables:
+- Direct ownership: `auth.uid() = user_id` for profiles, categories, transactions, budgets, savings_goals
+- Parent ownership via `EXISTS` subquery: budget_category_allocations (via budgets), savings_contributions (via savings_goals)
+- Full CRUD policies (SELECT, INSERT, UPDATE, DELETE) per table
 
-## Database Schema Overview
+### 20260220000004_default_categories.sql
+`seed_default_categories(user_id)` function — seeds 29 Africa-relevant categories for new users:
+- 19 expense categories (Food, Transport, Airtime, Rent, Mobile Money Fees, Family Support, Religious Giving, etc.)
+- 10 income categories (Salary, Business Income, Freelance, Side Hustle, Mobile Money Received, etc.)
+- IDs match `lib/core/constants/default_categories.dart` for clean local/remote sync
+
+## Database Schema
 
 ```
 auth.users (Supabase managed)
-    ↓
-profiles (1:1)
-    ↓
-├── allocation_categories (1:many)
-│       ↓
-│   allocations (many:1)
-│
-├── allocation_strategies (1:many)
-│       ↓
-│   strategy_allocations (many:many with categories)
-│
-├── income_entries (1:many)
-│       ↓
-│   allocations (many:1)
-│
-└── insights (1:many)
+    │
+    ├── profiles (1:1, auto-created on signup)
+    │
+    ├── categories (1:many, 29 defaults seeded on signup)
+    │
+    ├── transactions (1:many)
+    │       └── references category_id
+    │
+    ├── budgets (1:many)
+    │       └── budget_category_allocations (1:many, CASCADE delete)
+    │               └── references category_id
+    │
+    └── savings_goals (1:many)
+            └── savings_contributions (1:many, CASCADE delete)
+                    └── trigger: auto-updates current_amount + auto-completes goal
 ```
 
 ## Environment Variables
 
-Make sure your `.env` file contains:
+Your `.env` file must contain:
 
 ```env
-SUPABASE_URL=https://your-project.supabase.co
+BASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key
 ```
 
 ## Manual Migration (Alternative)
 
-If you prefer to run migrations manually:
+If you prefer the Supabase Dashboard:
 
-1. Go to your Supabase project dashboard
-2. Navigate to **SQL Editor**
-3. Copy and paste each migration file in order:
-   - `20260111000001_initial_schema.sql`
-   - `20260111000002_rls_policies.sql`
-   - `20260111000003_default_categories_function.sql`
-4. Execute each one
-
-## Development vs Production
-
-### Development
-```bash
-# Use local Supabase instance
-supabase start
-supabase db reset  # Resets local DB and applies all migrations
-```
-
-### Production
-```bash
-# Link to production project
-supabase link --project-ref YOUR_PROD_PROJECT_REF
-
-# Push migrations
-supabase db push
-```
+1. Go to **SQL Editor**
+2. Run each file in order:
+   - `20260220000001_core_schema.sql`
+   - `20260220000002_feature_tables.sql`
+   - `20260220000003_rls_policies.sql`
+   - `20260220000004_default_categories.sql`
 
 ## Testing the Setup
 
-After running migrations, you can test:
+After running migrations:
 
 1. **Create a test user** via Supabase Auth
 2. **Verify auto-creation** of:
-   - Profile in `profiles` table
-   - 5 default categories in `allocation_categories`
-   - 1 default strategy in `allocation_strategies`
-   - 5 strategy allocations in `strategy_allocations`
+   - 1 profile in `profiles`
+   - 29 default categories in `categories`
+3. **Test CRUD** — create a transaction, budget, or savings goal via the app
+4. **Verify RLS** — confirm users cannot access each other's data
+
+```sql
+-- Check a user's auto-created data
+SELECT * FROM public.profiles WHERE id = 'USER_UUID';
+SELECT COUNT(*) FROM public.categories WHERE user_id = 'USER_UUID';  -- should be 29
+```
 
 ## Troubleshooting
 
@@ -155,51 +131,32 @@ supabase db reset
 ```
 
 ### RLS policies blocking queries
-Check that:
-- User is authenticated (`auth.uid()` returns valid UUID)
-- Queries use authenticated Supabase client
-- Service role key is NOT used in client code (only for admin operations)
+- Ensure the user is authenticated (`auth.uid()` returns a valid UUID)
+- Use the authenticated Supabase client (anon key), not the service role key
+- Check that `user_id` is set correctly on INSERT
 
 ### Default categories not created
-Check trigger execution:
+The `handle_new_user()` trigger calls `seed_default_categories()`. Verify:
 ```sql
-SELECT * FROM public.profiles WHERE id = 'YOUR_USER_ID';
-SELECT * FROM public.allocation_categories WHERE user_id = 'YOUR_USER_ID';
+SELECT * FROM public.profiles WHERE id = 'USER_UUID';
+SELECT * FROM public.categories WHERE user_id = 'USER_UUID';
 ```
 
 ## Useful Commands
 
 ```bash
-# Check migration status
-supabase migration list
-
-# Create new migration
-supabase migration new migration_name
-
-# Pull remote schema changes
-supabase db pull
-
-# Generate TypeScript types from DB
-supabase gen types typescript --local > lib/types/database.types.ts
+supabase migration list        # Check migration status
+supabase migration new name    # Create new migration
+supabase db pull               # Pull remote schema changes
+supabase db push               # Push local migrations to remote
+supabase db reset              # Reset local DB (dev only)
 ```
 
-## Security Notes
+## Security
 
-- ✅ RLS enabled on all tables
-- ✅ Users can only access their own data
-- ✅ Auth required for all operations
-- ✅ Validation constraints prevent bad data
-- ✅ Soft deletes preserve data integrity
-- ✅ Triggers enforce business logic
-
-## Support
-
-For Supabase CLI help:
-```bash
-supabase help
-supabase db --help
-```
-
-Documentation:
-- [Supabase CLI Docs](https://supabase.com/docs/guides/cli)
-- [Supabase Migrations](https://supabase.com/docs/guides/cli/local-development#database-migrations)
+- RLS enabled on all 7 tables
+- Users can only access their own data
+- Auth required for all operations
+- CHECK constraints on amounts, enums, and percentages
+- CASCADE deletes for child records (budget allocations, contributions)
+- Triggers enforce business logic (updated_at, current_amount, auto-complete)

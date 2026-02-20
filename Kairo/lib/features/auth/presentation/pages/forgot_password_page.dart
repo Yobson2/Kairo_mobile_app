@@ -37,7 +37,10 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
           .forgotPassword(email: _emailController.text.trim());
       if (success && mounted) {
         // ignore: unawaited_futures
-        context.push('/otp-verification', extra: _emailController.text.trim());
+        context.push(
+          '/otp-verification',
+          extra: {'email': _emailController.text.trim()},
+        );
       }
     }
   }

@@ -7,10 +7,9 @@ import 'package:kairo/features/auth/data/models/user_model.dart';
 
 /// Mock implementation of [AuthRemoteDataSource] for local testing.
 ///
-/// Credentials: `test@test.com` / `password`
+/// Credentials: `test@gmail.com` / `passworD@123`  ·  OTP: `123456`
 ///
-/// Remove this file and set `USE_MOCK_AUTH=false` in `.env` to switch
-/// to the real API.
+/// Set `USE_MOCK_AUTH=false` in `.env` to switch to the real Supabase API.
 class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   static const _delay = Duration(milliseconds: 800);
 
@@ -45,15 +44,29 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   @override
-  Future<({UserModel user, TokensModel tokens})> register({
+  Future<void> register({
     required String name,
     required String email,
     required String password,
   }) async {
     await Future<void>.delayed(_delay);
+    // Mock: registration always succeeds. OTP will be verified next.
+  }
 
+  @override
+  Future<({UserModel user, TokensModel tokens})?> verifyOtp({
+    required String email,
+    required String code,
+  }) async {
+    await Future<void>.delayed(_delay);
+
+    if (code != '123456') {
+      throw const ServerException(message: 'Invalid OTP. Use 123456');
+    }
+
+    // Return authenticated user after OTP verification.
     return (
-      user: UserModel(id: 'mock-user-002', email: email, name: name),
+      user: UserModel(id: 'mock-user-002', email: email, name: 'New User'),
       tokens: _mockTokens,
     );
   }
@@ -64,16 +77,33 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> verifyOtp({required String email, required String code}) async {
+  Future<void> logout() async {
     await Future<void>.delayed(_delay);
-
-    if (code != '123456') {
-      throw const ServerException(message: 'Invalid OTP. Use 123456');
-    }
   }
 
   @override
-  Future<void> logout() async {
+  Future<({UserModel user, TokensModel tokens})> signInWithGoogle() async {
     await Future<void>.delayed(_delay);
+    return (
+      user: const UserModel(
+        id: 'mock-google-user',
+        email: 'google@test.com',
+        name: 'Google User',
+      ),
+      tokens: _mockTokens,
+    );
+  }
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> signInWithApple() async {
+    await Future<void>.delayed(_delay);
+    return (
+      user: const UserModel(
+        id: 'mock-apple-user',
+        email: 'apple@test.com',
+        name: 'Apple User',
+      ),
+      tokens: _mockTokens,
+    );
   }
 }

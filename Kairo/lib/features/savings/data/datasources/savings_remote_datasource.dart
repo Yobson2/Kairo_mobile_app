@@ -1,7 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:kairo/core/error/exceptions.dart';
-import 'package:kairo/core/network/api_endpoints.dart';
 import 'package:kairo/features/savings/data/models/savings_goal_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Abstract remote datasource for savings goals.
 abstract class SavingsRemoteDataSource {
@@ -11,73 +10,74 @@ abstract class SavingsRemoteDataSource {
   Future<void> deleteSavingsGoal(String id);
 }
 
-/// Implementation using Dio HTTP client.
-class SavingsRemoteDataSourceImpl implements SavingsRemoteDataSource {
-  /// Creates a [SavingsRemoteDataSourceImpl].
-  const SavingsRemoteDataSourceImpl(this._dio);
+/// Implementation of [SavingsRemoteDataSource] using Supabase.
+class SupabaseSavingsRemoteDataSource implements SavingsRemoteDataSource {
+  /// Creates a [SupabaseSavingsRemoteDataSource].
+  const SupabaseSavingsRemoteDataSource(this._supabase);
 
-  final Dio _dio;
+  final SupabaseClient _supabase;
+
+  String get _userId => _supabase.auth.currentUser!.id;
+  SupabaseQueryBuilder get _table => _supabase.from('savings_goals');
 
   @override
   Future<List<SavingsGoalModel>> getAllSavingsGoals() async {
     try {
-      final response =
-          await _dio.get<List<dynamic>>(ApiEndpoints.savingsGoals);
-      final data = response.data;
-      if (data == null) {
-        throw const ServerException(message: 'Empty response');
-      }
+      final data = await _table
+          .select()
+          .eq('user_id', _userId)
+          .order('created_at', ascending: false);
       return data
           .cast<Map<String, dynamic>>()
           .map(SavingsGoalModel.fromJson)
           .toList();
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
 
   @override
   Future<SavingsGoalModel> createSavingsGoal(SavingsGoalModel model) async {
     try {
-      final response = await _dio.post<Map<String, dynamic>>(
-        ApiEndpoints.savingsGoals,
-        data: model.toJson(),
-      );
-      return SavingsGoalModel.fromJson(response.data!);
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+      final payload = model.toJson()
+        ..['user_id'] = _userId
+        ..remove('server_id');
+      final data = await _table.insert(payload).select().single();
+      return SavingsGoalModel.fromJson(data);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
 
   @override
   Future<SavingsGoalModel> updateSavingsGoal(SavingsGoalModel model) async {
     try {
-      final response = await _dio.put<Map<String, dynamic>>(
-        '${ApiEndpoints.savingsGoals}/${model.id}',
-        data: model.toJson(),
-      );
-      return SavingsGoalModel.fromJson(response.data!);
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+      final payload = model.toJson()
+        ..remove('server_id')
+        ..remove('user_id');
+      final data = await _table
+          .update(payload)
+          .eq('id', model.id)
+          .eq('user_id', _userId)
+          .select()
+          .single();
+      return SavingsGoalModel.fromJson(data);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
 
   @override
   Future<void> deleteSavingsGoal(String id) async {
     try {
-      await _dio.delete<void>('${ApiEndpoints.savingsGoals}/$id');
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
+      await _table.delete().eq('id', id).eq('user_id', _userId);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
   }
+
+  static int? _parseCode(PostgrestException e) =>
+      e.code != null ? int.tryParse(e.code!) : null;
 }
 
 /// Mock implementation for development.

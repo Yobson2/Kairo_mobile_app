@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kairo/core/config/env_provider.dart';
 import 'package:kairo/core/network/dio_client.dart';
 import 'package:kairo/core/network/network_info.dart';
-import 'package:kairo/core/providers/storage_providers.dart';
+import 'package:kairo/core/providers/supabase_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'network_providers.g.dart';
@@ -25,6 +25,6 @@ NetworkInfo networkInfo(Ref ref) {
 @Riverpod(keepAlive: true)
 Dio dio(Ref ref) {
   final env = ref.watch(envProvider);
-  final secureStorage = ref.watch(secureStorageProvider);
-  return DioClient.create(env: env, secureStorage: secureStorage);
+  final supabaseClient = ref.watch(supabaseClientProvider);
+  return DioClient.create(env: env, supabaseClient: supabaseClient);
 }

@@ -2,6 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kairo/core/database/database_providers.dart';
 import 'package:kairo/core/providers/network_providers.dart';
+import 'package:kairo/core/providers/supabase_provider.dart';
 import 'package:kairo/features/savings/data/datasources/savings_local_datasource.dart';
 import 'package:kairo/features/savings/data/datasources/savings_remote_datasource.dart';
 import 'package:kairo/features/savings/data/repositories/savings_repository_impl.dart';
@@ -18,7 +19,7 @@ SavingsRemoteDataSource savingsRemoteDataSource(Ref ref) {
   final useMock =
       dotenv.get('USE_MOCK_SAVINGS', fallback: 'true') == 'true';
   if (useMock) return MockSavingsRemoteDataSource();
-  return SavingsRemoteDataSourceImpl(ref.watch(dioProvider));
+  return SupabaseSavingsRemoteDataSource(ref.watch(supabaseClientProvider));
 }
 
 /// Provides the [SavingsLocalDataSource].

@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kairo/core/extensions/context_extensions.dart';
+import 'package:kairo/core/router/route_names.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
 import 'package:kairo/core/widgets/buttons/app_primary_button.dart';
 import 'package:kairo/core/widgets/inputs/app_otp_field.dart';
 import 'package:kairo/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kairo/features/auth/presentation/providers/auth_state.dart';
 import 'package:kairo/features/auth/presentation/widgets/auth_header.dart';
-import 'package:go_router/go_router.dart';
 
 /// OTP verification page — enter the 6-digit code.
+///
+/// Used in the registration flow (navigates to dashboard on success)
+/// and the forgot-password flow (navigates to login on success).
 class OtpVerificationPage extends ConsumerStatefulWidget {
   /// Creates an [OtpVerificationPage].
-  const OtpVerificationPage({required this.email, super.key});
+  const OtpVerificationPage({
+    required this.email,
+    this.name,
+    super.key,
+  });
 
   /// Email the OTP was sent to.
   final String email;
+
+  /// User name — present only in the registration flow.
+  final String? name;
 
   @override
   ConsumerState<OtpVerificationPage> createState() =>
@@ -25,6 +36,8 @@ class OtpVerificationPage extends ConsumerStatefulWidget {
 class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
   String _otpCode = '';
 
+  bool get _isRegistrationFlow => widget.name != null;
+
   Future<void> _onVerify() async {
     if (_otpCode.length < 6) return;
     context.unfocus();
@@ -32,7 +45,13 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
         .read(authNotifierProvider.notifier)
         .verifyOtp(email: widget.email, code: _otpCode);
     if (success && mounted) {
-      context.go('/login');
+      if (_isRegistrationFlow) {
+        // OTP verified → user is now authenticated → go to dashboard.
+        context.go(RouteNames.dashboard);
+      } else {
+        // Forgot-password flow — return to login.
+        context.go(RouteNames.login);
+      }
     }
   }
 
@@ -44,6 +63,10 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
     ref.listen<AuthState>(authNotifierProvider, (_, state) {
       if (state is AuthError) {
         context.showSnackBar(state.message, isError: true);
+      }
+      // Safety net: navigate on auth state change.
+      if (state is AuthAuthenticated) {
+        context.go(RouteNames.dashboard);
       }
     });
 
@@ -75,6 +98,9 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
                   onPressed: isLoading
                       ? null
                       : () {
+                          // For forgot-password flow, re-send the reset email.
+                          // For registration flow, Supabase requires re-calling
+                          // signUp to resend the confirmation OTP.
                           ref
                               .read(authNotifierProvider.notifier)
                               .forgotPassword(email: widget.email);
