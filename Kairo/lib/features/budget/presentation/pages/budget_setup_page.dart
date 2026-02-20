@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kairo/core/extensions/context_extensions.dart';
-import 'package:kairo/core/theme/app_colors.dart';
+import 'package:kairo/core/mascot/mascot_celebration_overlay.dart';
+import 'package:kairo/core/providers/storage_providers.dart';
 import 'package:kairo/core/theme/app_radius.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
-import 'package:kairo/core/providers/storage_providers.dart';
 import 'package:kairo/core/utils/currency_formatter.dart';
 import 'package:kairo/core/widgets/layout/app_app_bar.dart';
 import 'package:kairo/features/budget/domain/entities/budget_category.dart';
@@ -168,9 +168,12 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
     if (mounted) {
       setState(() => _isCreating = false);
       if (success) {
-        context
-          ..showSnackBar('Budget created successfully!')
-          ..pop();
+        await MascotCelebrationOverlay.show(
+          context,
+          title: 'Budget Created!',
+          subtitle: 'Kai is proud of you for planning ahead.',
+        );
+        if (mounted) context.pop();
       } else {
         context.showSnackBar('Failed to create budget', isError: true);
       }

@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kairo/core/mascot/kai_mascot.dart';
+import 'package:kairo/core/mascot/kai_pose.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
 
-/// Header widget for auth pages with branded logo, title, and subtitle.
+/// Header widget for auth pages with Kai mascot, title, and subtitle.
+///
+/// Shows Kai in a contextual pose inside concentric circles, matching
+/// the onboarding visual style. Pass [mascotPose] to set the emotional
+/// context (e.g. [KaiPose.thinking] for forgot-password).
 class AuthHeader extends StatelessWidget {
   /// Creates an [AuthHeader].
   const AuthHeader({
     required this.title,
     super.key,
     this.subtitle,
+    this.mascotPose = KaiPose.welcome,
+    this.mascotSize = 80,
   });
 
   /// Main title text.
@@ -16,6 +23,12 @@ class AuthHeader extends StatelessWidget {
 
   /// Optional subtitle text.
   final String? subtitle;
+
+  /// Which pose Kai should display. Defaults to [KaiPose.welcome].
+  final KaiPose mascotPose;
+
+  /// Size of the mascot illustration.
+  final double mascotSize;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +40,7 @@ class AuthHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppSpacing.verticalXl,
-        // Branded logo with concentric circles (matches onboarding style)
+        // Kai mascot with concentric circles (matches onboarding style)
         Center(
           child: SizedBox(
             width: 120,
@@ -55,13 +68,8 @@ class AuthHeader extends StatelessWidget {
                         container.withValues(alpha: isDark ? 0.4 : 0.7),
                   ),
                 ),
-                // Kairo logo
-                SvgPicture.asset(
-                  isDark
-                      ? 'assets/images/logo-dark.svg'
-                      : 'assets/images/logo.svg',
-                  height: 48,
-                ),
+                // Kai mascot
+                KaiMascot(pose: mascotPose, size: mascotSize),
               ],
             ),
           ),

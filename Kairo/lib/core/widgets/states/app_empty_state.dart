@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kairo/core/mascot/kai_mascot.dart';
+import 'package:kairo/core/mascot/kai_pose.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
 
-/// Empty state placeholder with icon, title, subtitle, and action.
+/// Empty state placeholder with Kai mascot, title, subtitle, and action.
+///
+/// When [useMascot] is true (default), shows Kai in the idle pose instead
+/// of a plain icon. Pass a custom [mascotPose] for contextual poses.
 class AppEmptyState extends StatelessWidget {
   /// Creates an [AppEmptyState].
   const AppEmptyState({
@@ -12,9 +17,12 @@ class AppEmptyState extends StatelessWidget {
     this.actionText,
     this.onAction,
     this.iconSize = 64,
+    this.useMascot = true,
+    this.mascotPose = KaiPose.idle,
+    this.mascotSize = 120,
   });
 
-  /// Large icon displayed at the top.
+  /// Large icon displayed at the top (used when [useMascot] is false).
   final IconData icon;
 
   /// Title text.
@@ -29,8 +37,17 @@ class AppEmptyState extends StatelessWidget {
   /// Callback for the action button.
   final VoidCallback? onAction;
 
-  /// Size of the icon.
+  /// Size of the icon (used when [useMascot] is false).
   final double iconSize;
+
+  /// Whether to show Kai mascot instead of the plain icon.
+  final bool useMascot;
+
+  /// Which pose Kai should display. Defaults to [KaiPose.idle].
+  final KaiPose mascotPose;
+
+  /// Size of the mascot illustration.
+  final double mascotSize;
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +60,17 @@ class AppEmptyState extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                size: iconSize,
-                color: theme.colorScheme.outline,
-              ),
+              if (useMascot)
+                KaiMascot(
+                  pose: mascotPose,
+                  size: mascotSize,
+                )
+              else
+                Icon(
+                  icon,
+                  size: iconSize,
+                  color: theme.colorScheme.outline,
+                ),
               AppSpacing.verticalLg,
               Text(
                 title,

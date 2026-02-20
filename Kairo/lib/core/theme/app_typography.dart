@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kairo/core/theme/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kairo/core/theme/app_colors.dart';
 
 /// Typography tokens using Google Fonts (Inter).
 ///
@@ -9,6 +9,45 @@ class AppTypography {
   const AppTypography._();
 
   static String get _fontFamily => GoogleFonts.inter().fontFamily!;
+
+  /// Display font for mascot-associated headings (Space Grotesk).
+  static String get displayFontFamily =>
+      GoogleFonts.spaceGrotesk().fontFamily!;
+
+  /// Mascot display style — large headlines (achievements, onboarding).
+  static TextStyle mascotDisplayLarge({Color? color}) => TextStyle(
+        fontFamily: displayFontFamily,
+        fontSize: 32,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5,
+        color: color,
+      );
+
+  /// Mascot display style — medium headlines (section titles).
+  static TextStyle mascotDisplayMedium({Color? color}) => TextStyle(
+        fontFamily: displayFontFamily,
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.25,
+        color: color,
+      );
+
+  /// Mascot display style — small (speech bubbles, tips).
+  static TextStyle mascotDisplaySmall({Color? color}) => TextStyle(
+        fontFamily: displayFontFamily,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: color,
+      );
+
+  /// Mascot label style — financial figures.
+  static TextStyle mascotFigure({Color? color}) => TextStyle(
+        fontFamily: displayFontFamily,
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.5,
+        color: color,
+      );
 
   // ── Light Text Theme ─────────────────────────────────────────
 

@@ -136,4 +136,58 @@ class AppColors {
   /// Savings color (blue).
   static const Color savingsLight = Color(0xFF3B82F6);
   static const Color savingsDark = Color(0xFF60A5FA);
+
+  // ── Mascot Colors (Kai the Chameleon) ─────────────────────
+
+  /// Kai's primary body color.
+  static const Color kaiBody = Color(0xFF10B981);
+
+  /// Kai's lighter belly color.
+  static const Color kaiBelly = Color(0xFFD1FAE5);
+
+  /// Kai's head crest / deep teal.
+  static const Color kaiCrest = Color(0xFF064E3B);
+
+  /// Kai's eye color (amber-gold).
+  static const Color kaiEye = Color(0xFFF59E0B);
+
+  /// Kai's Adinkra / Ndebele markings accent.
+  static const Color kaiMarkings = Color(0xFF065F46);
+
+  /// Kai's wristband blue accent.
+  static const Color kaiAccentBlue = Color(0xFF3B82F6);
+
+  // ── Savanna Sunset Palette (warm variant for marketing) ───
+
+  /// Warm gold secondary.
+  static const Color savannaGold = Color(0xFFD97706);
+
+  /// Sunset orange accent.
+  static const Color savannaSunset = Color(0xFFEA580C);
+
+  /// Savanna sand neutral.
+  static const Color savannaSand = Color(0xFFD4A574);
+
+  /// Warm cream background.
+  static const Color savannaWarmWhite = Color(0xFFFFFBF5);
+
+  /// Terracotta red.
+  static const Color savannaTerracotta = Color(0xFFDC2626);
+
+  // ── Afrofuture Neon Palette (bold Gen-Z marketing) ────────
+
+  /// Neon mint.
+  static const Color afroNeonMint = Color(0xFF6EE7B7);
+
+  /// Deep space background.
+  static const Color afroDeepSpace = Color(0xFF020617);
+
+  /// Electric purple accent.
+  static const Color afroViolet = Color(0xFF8B5CF6);
+
+  /// Cyber cyan accent.
+  static const Color afroCyan = Color(0xFF06B6D4);
+
+  /// Hot pink danger/expense.
+  static const Color afroHotPink = Color(0xFFEC4899);
 }

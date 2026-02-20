@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kairo/core/extensions/context_extensions.dart';
+import 'package:kairo/core/mascot/kai_pose.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
 import 'package:kairo/core/utils/validators.dart';
 import 'package:kairo/core/widgets/buttons/app_primary_button.dart';
@@ -8,7 +10,6 @@ import 'package:kairo/core/widgets/inputs/app_text_field.dart';
 import 'package:kairo/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kairo/features/auth/presentation/providers/auth_state.dart';
 import 'package:kairo/features/auth/presentation/widgets/auth_header.dart';
-import 'package:go_router/go_router.dart';
 
 /// Forgot password page — enter email to receive a reset code.
 class ForgotPasswordPage extends ConsumerStatefulWidget {
@@ -69,6 +70,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                 AuthHeader(
                   title: context.l10n.authResetPassword,
                   subtitle: context.l10n.authForgotPasswordSubtitle,
+                  mascotPose: KaiPose.thinking,
                 ),
                 AppTextField(
                   controller: _emailController,

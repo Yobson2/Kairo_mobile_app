@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:kairo/core/mascot/kai_mascot.dart';
+import 'package:kairo/core/mascot/kai_pose.dart';
 
-/// Finance-themed illustration for each onboarding step.
-///
-/// Renders a composed graphic using brand colors, a central icon,
-/// and decorative floating elements — no external assets needed.
+/// Finance-themed illustration for each onboarding step featuring
+/// Kai the Chameleon mascot with contextual floating elements.
 class OnboardingIllustration extends StatelessWidget {
   const OnboardingIllustration({
     required this.stepIndex,
@@ -25,7 +25,7 @@ class OnboardingIllustration extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Outer soft circle
+          // Outer soft circle (preserved from original design).
           Container(
             width: 240,
             height: 240,
@@ -34,7 +34,7 @@ class OnboardingIllustration extends StatelessWidget {
               color: container.withValues(alpha: isDark ? 0.2 : 0.4),
             ),
           ),
-          // Inner circle
+          // Inner circle.
           Container(
             width: 160,
             height: 160,
@@ -43,31 +43,26 @@ class OnboardingIllustration extends StatelessWidget {
               color: container.withValues(alpha: isDark ? 0.4 : 0.7),
             ),
           ),
-          // Main icon
-          Icon(
-            _mainIcon,
-            size: 72,
-            color: primary,
+          // Kai mascot in the appropriate pose.
+          KaiMascot(
+            pose: _poseForStep,
+            size: 140,
           ),
-          // Floating decorative elements
-          ..._buildFloatingElements(primary, container, isDark),
+          // Floating decorative elements.
+          ..._buildFloatingElements(primary, isDark),
         ],
       ),
     );
   }
 
-  IconData get _mainIcon => switch (stepIndex) {
-        0 => Icons.account_balance_wallet_rounded,
-        1 => Icons.pie_chart_rounded,
-        2 => Icons.savings_rounded,
-        _ => Icons.account_balance_wallet_rounded,
+  KaiPose get _poseForStep => switch (stepIndex) {
+        0 => KaiPose.welcome,
+        1 => KaiPose.thinking,
+        2 => KaiPose.celebration,
+        _ => KaiPose.welcome,
       };
 
-  List<Widget> _buildFloatingElements(
-    Color primary,
-    Color container,
-    bool isDark,
-  ) =>
+  List<Widget> _buildFloatingElements(Color primary, bool isDark) =>
       switch (stepIndex) {
         0 => [
             Positioned(
@@ -182,9 +177,7 @@ class _FloatingBubble extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: isDark
-            ? color.withValues(alpha: 0.15)
-            : Colors.white,
+        color: isDark ? color.withValues(alpha: 0.15) : Colors.white,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(

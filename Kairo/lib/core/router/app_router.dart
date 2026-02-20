@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kairo/core/mascot/kai_pose.dart';
 import 'package:kairo/core/providers/analytics_provider.dart';
 import 'package:kairo/core/providers/storage_providers.dart';
 import 'package:kairo/core/router/analytics_observer.dart';
 import 'package:kairo/core/router/page_transitions.dart';
 import 'package:kairo/core/router/route_names.dart';
+import 'package:kairo/core/widgets/layout/app_app_bar.dart';
+import 'package:kairo/core/widgets/states/app_empty_state.dart';
 import 'package:kairo/features/auth/presentation/pages/create_password_page.dart';
 import 'package:kairo/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:kairo/features/auth/presentation/pages/login_page.dart';
@@ -295,7 +298,13 @@ GoRouter appRouter(Ref ref) {
                     path: 'insights',
                     name: RouteNames.insightsName,
                     builder: (context, state) => const Scaffold(
-                      body: Center(child: Text('Insights - Coming Soon')),
+                      appBar: AppAppBar(title: 'Insights'),
+                      body: AppEmptyState(
+                        mascotPose: KaiPose.thinking,
+                        title: 'Insights Coming Soon',
+                        subtitle:
+                            'Your spending patterns will be analyzed here.',
+                      ),
                     ),
                   ),
                 ],

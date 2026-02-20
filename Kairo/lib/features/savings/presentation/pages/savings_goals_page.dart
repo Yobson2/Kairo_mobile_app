@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kairo/core/mascot/kai_pose.dart';
 import 'package:kairo/core/router/route_names.dart';
 import 'package:kairo/core/theme/app_radius.dart';
 import 'package:kairo/core/theme/app_spacing.dart';
@@ -41,9 +42,9 @@ class SavingsGoalsPage extends ConsumerWidget {
         data: (goals) {
           if (goals.isEmpty) {
             return AppEmptyState(
-              icon: Icons.savings_outlined,
+              mascotPose: KaiPose.thinking,
               title: 'No savings goals yet',
-              subtitle: 'Start saving toward something meaningful',
+              subtitle: 'What are you saving for? Set a goal to start tracking.',
               actionText: 'Create Goal',
               onAction: () =>
                   context.pushNamed(RouteNames.addSavingsGoalName),

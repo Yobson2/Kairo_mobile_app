@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kairo/core/mascot/kai_mascot.dart';
+import 'package:kairo/core/mascot/kai_pose.dart';
 import 'package:kairo/core/router/route_names.dart';
+import 'package:kairo/core/theme/app_spacing.dart';
 import 'package:kairo/core/widgets/data_display/app_list_tile.dart';
+import 'package:kairo/core/widgets/feedback/app_bottom_sheet.dart';
 import 'package:kairo/core/widgets/layout/app_app_bar.dart';
 import 'package:kairo/core/widgets/layout/app_scaffold.dart';
 
@@ -65,11 +69,27 @@ class MorePage extends StatelessWidget {
   }
 
   void _showComingSoon(BuildContext context, String feature) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$feature is coming soon!'),
-        duration: const Duration(seconds: 2),
-      ),
+    showAppBottomSheet<void>(
+      context,
+      builder: (ctx) {
+        final theme = Theme.of(ctx);
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const KaiMascot(pose: KaiPose.thinking, size: 100),
+            AppSpacing.verticalLg,
+            Text(feature, style: theme.textTheme.titleMedium),
+            AppSpacing.verticalSm,
+            Text(
+              'Coming soon! Stay tuned.',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            AppSpacing.verticalXl,
+          ],
+        );
+      },
     );
   }
 }

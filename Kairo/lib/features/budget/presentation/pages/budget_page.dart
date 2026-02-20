@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kairo/core/extensions/context_extensions.dart';
+import 'package:kairo/core/mascot/kai_mascot.dart';
+import 'package:kairo/core/mascot/kai_pose.dart';
 import 'package:kairo/core/router/route_names.dart';
 import 'package:kairo/core/theme/app_colors.dart';
 import 'package:kairo/core/theme/app_radius.dart';
@@ -75,21 +77,7 @@ class _EmptyBudgetState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: context.colorScheme.primaryContainer.withValues(
-                  alpha: 0.3,
-                ),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.account_balance_wallet_outlined,
-                size: 56,
-                color: context.colorScheme.primary,
-              ),
-            ),
+            const KaiMascot(pose: KaiPose.idle, size: 120),
             AppSpacing.verticalXl,
             Text(
               'No Active Budget',
@@ -142,11 +130,7 @@ class _ErrorState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline_rounded,
-              size: 48,
-              color: context.colorScheme.error,
-            ),
+            const KaiMascot(pose: KaiPose.warning, size: 100),
             AppSpacing.verticalLg,
             Text(
               'Something went wrong',

@@ -74,7 +74,6 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
 
                 if (filtered.isEmpty) {
                   return AppEmptyState(
-                    icon: Icons.receipt_long_outlined,
                     title: 'No transactions yet',
                     subtitle: 'Tap + to add your first transaction',
                     actionText: 'Add Transaction',
