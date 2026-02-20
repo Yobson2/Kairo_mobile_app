@@ -115,14 +115,14 @@ class _SplashPageState extends ConsumerState<SplashPage>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Compass coin logo.
-                  Transform.scale(
-                    scale: _logoScale.value,
-                    child: SvgPicture.asset(
-                      'assets/images/logo-gradient.svg',
-                      width: 80,
-                      height: 80,
-                    ),
-                  ),
+                  // Transform.scale(
+                  //   scale: _logoScale.value,
+                  //   child: SvgPicture.asset(
+                  //     'assets/images/logo-gradient.svg',
+                  //     width: 80,
+                  //     height: 80,
+                  //   ),
+                  // ),
                   // Kai emerges from behind the logo.
                   Transform.translate(
                     offset: Offset(_mascotSlide.value, 0),
